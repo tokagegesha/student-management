@@ -1,0 +1,357 @@
+<br>
+
+<div class="row" style="text-align: center">
+  <div class="col-md-8 col-sm-offset-2">
+    <div class="panel panel-primary">
+      <div class="panel-heading" style="text-align: left">
+        <span style="text-align: center">User Data </span>
+        <button *ngIf="userRole=='ADMIN'" style="text-align: left" class="btn btn-primary"
+                (click)="userInfoEditMode = !userInfoEditMode;roleBackUserData()">
+          <i *ngIf="userRole=='ADMIN'" class="fa"
+             [ngClass]="{'fa-pencil': !userInfoEditMode, 'fa-undo': userInfoEditMode}" aria-hidden="true"></i>
+        </button>
+        <button style="text-align: left" *ngIf="userInfoEditMode" (click)="saveUserInfo()" class="btn btn-success">
+          შენახვა
+        </button>
+      </div>
+      <div class="panel-body form-horizontal">
+
+        <div class="form-group" id="firstName">
+          <label class="col-sm-2 control-label" for="firstName">First name :</label>
+          <div class="col-sm-10">
+            <input class="form-control" type="text" placeholder="First name" name="lastName"
+                   [disabled]="!userInfoEditMode" [(ngModel)]="userInfo.firstName" required>
+          </div>
+        </div>
+
+
+        <div class="form-group" id="lastName">
+          <label class="col-sm-2 control-label" for="lastName">Last name :</label>
+          <div class="col-sm-10">
+            <input class="form-control" type="text" placeholder="Last name" name="lastName"
+                   [disabled]="!userInfoEditMode" [(ngModel)]="userInfo.lastName" required>
+          </div>
+        </div>
+
+        <div class="form-group" id="email">
+          <label class="col-sm-2 control-label" for="email">Email :</label>
+          <div class="col-sm-10">
+            <input class="form-control" type="email" placeholder="Email" name="email" [disabled]="!userInfoEditMode"
+                   [(ngModel)]="userInfo.email" required>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="studentInfo.id" class="row" style="text-align: center">
+  <div class="col-md-8 col-sm-offset-2">
+    <div class="panel panel-primary">
+      <div class="panel-heading" style="text-align: left">
+        <span style="text-align: center">Exchange Student Data </span>
+        <button *ngIf="userRole=='ADMIN'" style="text-align: left" class="btn btn-primary"
+                (click)="studentInfoEditMode = !studentInfoEditMode;roleBackStudentData()">
+          <i *ngIf="userRole=='ADMIN'" class="fa"
+             [ngClass]="{'fa-pencil': !studentInfoEditMode, 'fa-undo': studentInfoEditMode}" aria-hidden="true"></i>
+        </button>
+        <button style="text-align: left" *ngIf="studentInfoEditMode" (click)="saveStudentInfo()"
+                class="btn btn-success">შენახვა
+        </button>
+      </div>
+      <div class="panel-body form-horizontal">
+
+        <div class="form-group" *ngIf=" userRole=='ADMIN'">
+          <label class="control-label col-md-4" for="contactPersonPhone">Status :</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="status" name="status" placeholder="status"
+                   value="{{studentInfoToEdit.status | formatCandidateStatus:'en'}}" [disabled]="true">
+          </div>
+        </div>
+
+
+        <!-- <div class="form-group" style="position: relative">
+           <label class="control-label col-md-4" for="universityName">University :</label>
+           <div class="col-sm-8">
+             <ng-autocomplete (selected)="changeUniversity($event.item)" [classes]="['']" [group]="group"></ng-autocomplete>
+           </div>
+         </div>-->
+
+
+        <div class="form-group">
+          <label class="control-label col-md-4" for="universityName">University :</label>
+          <div class="col-sm-8" id="universityName">
+            <input
+              id="universityNameInput"
+              type="text"
+              class="form-control"
+              [(ngModel)]="selectedUniversity"
+              [ngbTypeahead]="searchUniversity"
+              placeholder="Find your university"
+              [resultTemplate]="universityResultTemplate"
+              [inputFormatter]="universityFormatter"
+              (ngModelChange)="updateSemesters($event)"
+              [disabled]="!studentInfoEditMode"
+            />
+            <template #universityResultTemplate let-r="result" let-t="term">
+              <h5>{{r.name}}</h5>
+            </template>
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <label class="control-label col-md-4">Semester :</label>
+          <div class="col-sm-8">
+            <ss-multiselect-dropdown class="my-large-selector" [options]="myOptions" [(ngModel)]="semesterIds"
+                                     [disabled]="!studentInfoEditMode"
+                                     (ngModelChange)="onChange($event)"></ss-multiselect-dropdown>
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <label class="control-label col-md-4" for="passportNumber">Passport number :</label>
+          <div class="col-sm-8" id="passportNumber">
+            <input class="form-control" type="text" placeholder="Passport number" name="email"
+                   [disabled]="!studentInfoEditMode" [(ngModel)]="studentInfoToEdit.passportNumber" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-4" for="gender">Gender :</label>
+          <div class="col-sm-8" id="gender">
+            <select class="form-control" placeholder="Gender" name="gender" [disabled]="!studentInfoEditMode"
+                    [(ngModel)]="studentInfoToEdit.gender" required>
+              <option value="1">Male</option>
+              <option value="2">Female</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+
+          <label class="control-label col-md-4" for="citizenship">Citizenship :</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="citizenship" placeholder="Citizenship"
+                   name="countryOfResidence"
+                   [(ngModel)]="studentInfoToEdit.citizenship" [disabled]="!studentInfoEditMode">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-4" for="inputCountryOfResidence">Country Of Residence :</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="inputCountryOfResidence" placeholder="Country of residence"
+                   name="countryOfResidence"
+                   [(ngModel)]="studentInfoToEdit.countryOfResidence" [disabled]="!studentInfoEditMode">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-4" for="birthDate">Birth date :</label>
+          <div class="col-sm-8">
+            <input type="date" class="form-control" id="birthDate" name="birthDate" placeholder="Birth Date"
+                   [ngModel]="studentInfoToEdit.birthDate | date: 'yyyy-dd-MM' "
+                   [disabled]="!studentInfoEditMode">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-4" for="address">Address :</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="address" name="address" [(ngModel)]="studentInfoToEdit.address "
+                   placeholder="Address"
+                   [disabled]="!studentInfoEditMode">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-4" for="city">City :</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="city" name="city" [(ngModel)]="studentInfoToEdit.city "
+                   placeholder="City"
+                   [disabled]="!studentInfoEditMode">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-4" for="city">Country :</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="country" name="country" [(ngModel)]="studentInfoToEdit.country "
+                   placeholder="Country"
+                   [disabled]="!studentInfoEditMode">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-4" for="city">Phone :</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone"
+                   [(ngModel)]="studentInfoToEdit.phone "
+                   [disabled]="!studentInfoEditMode">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-4" for="contactPersonName">Contact Person Name :</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="contactPersonName" name="contactPersonName"
+                   placeholder="Contact Person Name"
+                   [(ngModel)]="studentInfoToEdit.contactPersonName"
+                   [disabled]="!studentInfoEditMode">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-4" for="contactPersonAddress">Contact Person Address :</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="contactPersonAddress" name="contactPersonAddress"
+                   placeholder="Contact Person Address"
+                   [(ngModel)]="studentInfoToEdit.contactPersonAddress"
+                   [disabled]="!studentInfoEditMode">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-4" for="contactPersonPhone">Contact Person Phone :</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="contactPersonPhone" name="contactPersonPhone"
+                   placeholder="Contact Person Phone"
+                   [(ngModel)]="studentInfoToEdit.contactPersonPhone"
+                   [disabled]="!studentInfoEditMode">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-4" for="contactPersonPhone">Contact Person Relationship :</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="contactPersonRelationship" name="contactPersonRelationship"
+                   placeholder="Contact Person Relationship"
+                   [(ngModel)]="studentInfoToEdit.contactPersonRelationship"
+                   [disabled]="!studentInfoEditMode">
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="studentInfoToEdit.letterOfAcceptancePath" style="padding-left: 24%;">
+          <div class="col-sm-8"><a href="http://localhost:8081/api/student/acceptance/download/{{studentInfoToEdit.id}}" class="btn btn-default" role="button">
+            <span class="glyphicon glyphicon-floppy-save" style="width: 48px" aria-hidden="true" title="გადმოწერა"></span>
+            download letter of acceptance
+          </a>
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="!studentInfoToEdit.letterOfNominationPath">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <label for="letterOfNomination">Upload your letter of nomination </label>
+              <input type="file" id="letterOfNomination" required (change)="fileChange($event,1)"
+                     placeholder="Upload file" accept=".pdf,.doc,.docx,.jpg,.png">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="!studentInfoToEdit.cvPath">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <label for="exampleInputCv">Upload your CV</label>
+              <input type="file" id="exampleInputCv" required (change)="fileChange($event,2)" placeholder="Upload file"
+                     accept=".pdf,.doc,.docx,.txt">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="!studentInfoToEdit.diplomaPath">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <label for="diploma">Upload your diploma</label>
+              <input type="file" required id="diploma" (change)="fileChange($event,3)"
+                     placeholder="Upload file" accept=".pdf,.doc,.docx,.txt">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="!studentInfoToEdit.learningAgreementPath">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <label for="learningAgreement">Upload your learning agreement </label>
+              <input type="file" required id="learningAgreement" (change)="fileChange($event,4)"
+                     placeholder="Upload file"
+                     accept=".pdf,.doc,.docx">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group"  *ngIf="!studentInfoToEdit.universityRecordPath">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <label for="universityRecord">Upload your university record</label>
+              <input type="file" required id="universityRecord" (change)="fileChange($event,5)"
+                     placeholder="Upload file" accept=".pdf,.doc,.docx">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="!studentInfoToEdit.picturePath">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <label for="picture">Upload your picture</label>
+              <input type="file" required id="picture" (change)="fileChange($event,6)"
+                     placeholder="Upload file"
+                     accept=".pdf,.doc,.docx,.jpg,.png">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group"  *ngIf="!studentInfoToEdit.passportPath">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <label for="passport">Upload your Passport</label>
+              <input type="file" required id="passport" (change)="fileChange($event,7)"
+                     placeholder="Upload file" accept=".pdf,.doc,.docx">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="!studentInfoToEdit.proofOfEnglishSkillPath">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <label for="proofOfEnglishSkill">Upload your proof of english skill</label>
+              <input type="file" required id="proofOfEnglishSkill" (change)="fileChange($event,8)"
+                     placeholder="Upload file" accept=".pdf,.doc,.docx">
+            </div>
+          </div>
+
+        </div>
+
+        <div class="form-group"  *ngIf="!studentInfoToEdit.healthInsurancePath">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <label for="healthInsurance">Upload your Health Insurance</label>
+              <input type="file" required id="healthInsurance" (change)="fileChange($event,9)"
+                     placeholder="Upload file" accept=".pdf,.doc,.docx">
+            </div>
+          </div>
+        </div>
+
+
+        <div class="form-group" *ngIf="hasToUploadDocument()">
+          <input type="submit" class="btn btn-primary" value="Save uploaded files" (click)="updateStudentDocumentsData()"/>
+        </div>
+
+        <!--
+                <div class="form-group">
+                  <div class="panel panel-default">
+                    <div class="panel-body">
+                      <label for="proofOfEnglishSkill">Upload your proof of english skill</label>
+                      <input type="file" required id="proofOfEnglishSkill" (change)="fileChange($event,8)"
+                             placeholder="Upload file" accept=".pdf,.doc,.docx">
+                    </div>
+                  </div>
+                </div>-->
+
+      </div>
+    </div>
+  </div>
+</div>
+<hr>
+

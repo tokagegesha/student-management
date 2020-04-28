@@ -1,0 +1,328 @@
+<br>
+<div *ngIf="currentUser">
+  <div class="row">
+    <div class="col-md-6">
+
+      <div class="form-group" style="position: relative">
+        <ng-autocomplete (selected)="Selected($event)" [classes]="['']" [group]="group"></ng-autocomplete>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="exampleInputSemester">Choose Semester</label>
+    <ss-multiselect-dropdown [options]="myOptions" [(ngModel)]="semesterIds" id="exampleInputSemester" (ngModelChange)="onChange($event)"></ss-multiselect-dropdown>
+  </div>
+
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email" name="email"
+               [(ngModel)]="email">
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Degree</label>
+        <select class="form-control" [(ngModel)]="degree">
+          <option *ngFor="let dType of degreeTypes" [ngValue]="dType">{{dType}}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="exampleInputFirstName">First Name</label>
+        <input type="text" class="form-control" id="exampleInputFirstName" placeholder="First Name" name="firstName"
+               [(ngModel)]="firstName">
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="exampleInputLastName">Last Name</label>
+        <input type="text" class="form-control" id="exampleInputLastName" placeholder="Last Name" name="lastName"
+               [(ngModel)]="lastName">
+      </div>
+    </div>
+
+  </div>
+
+  <div class="form-group">
+    <label>
+      Gender
+    </label>
+    <label class="radio-inline">
+      <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="1" [(ngModel)]="gender"> male
+    </label>
+    <label class="radio-inline">
+      <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="2" [(ngModel)]="gender"> female
+    </label>
+  </div>
+
+  <div class="row">
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="inputCitizenship">Citizenship</label>
+        <input type="text" class="form-control" id="inputCitizenship" placeholder="Citizenship" name="Citizenship"
+               [(ngModel)]="citizenship">
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="inputCountryOfResidence">Country of residence</label>
+        <input type="text" class="form-control" id="inputCountryOfResidence" placeholder="Country of residence"
+               name="countryOfResidence"
+               [(ngModel)]="countryOfResidence">
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="birthDate">Birth Date</label>
+        <input type="date" class="form-control" id="birthDate"
+               name="birthDate"
+               [(ngModel)]="birthDate">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="contactPersonPhone">Passport Number</label>
+        <input type="text" class="form-control" placeholder="Passport Number" id="passportNumber"
+               name="passportNumber"
+               [(ngModel)]="passportNumber">
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="address">Address</label>
+        <input type="text" class="form-control" placeholder="Address" id="address"
+               name="address"
+               [(ngModel)]="address">
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" class="form-control" placeholder="City" id="city"
+               name="city"
+               [(ngModel)]="city">
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="zipCode">Zip Code</label>
+        <input type="number" class="form-control" placeholder="Zip Code" id="zipCode"
+               name="zipCode"
+               [(ngModel)]="zipCode">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="country">Country</label>
+        <input type="text" class="form-control" placeholder="Country" id="country"
+               name="country"
+               [(ngModel)]="country">
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="text" class="form-control" placeholder="Phone" id="phone"
+               name="phone"
+               [(ngModel)]="phone">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="contactPersonName">Contact Person Name</label>
+        <input type="text" class="form-control" placeholder="Contact Person Name" id="contactPersonName"
+               name="contactPersonName"
+               [(ngModel)]="contactPersonName">
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="contactPersonAddress">Contact Person Address</label>
+        <input type="text" class="form-control" placeholder="Contact Person Address" id="contactPersonAddress"
+               name="contactPersonAddress"
+               [(ngModel)]="contactPersonAddress">
+      </div>
+    </div>
+  </div>
+
+
+  <div class="form-group">
+    <label>
+      Accommodation
+    </label>
+    <label class="radio-inline">
+      <input type="radio" name="inlineRadioOptions" value="true" [(ngModel)]="accommodation"> yes
+    </label>
+    <label class="radio-inline">
+      <input type="radio" name="inlineRadioOptions" value="false" [(ngModel)]="accommodation"> no
+    </label>
+  </div>
+
+  <div class="row">
+
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Exchange Programme</label>
+        <select class="form-control" [(ngModel)]="selectedExchangeProgramme">
+          <option *ngFor="let programme of exchangeProgrammes" [ngValue]="programme">{{programme.name}}</option>
+        </select>
+      </div>
+    </div>
+
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="contactPersonPhone">Contact Person Phone</label>
+        <input type="text" class="form-control" placeholder="Contact Person Phone" id="contactPersonPhone"
+               name="contactPersonPhone"
+               [(ngModel)]="contactPersonPhone">
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="contactPersonRelationship">Contact Person Relationship</label>
+        <input type="text" class="form-control" placeholder="Contact Person Relationship" id="contactPersonRelationship"
+               name="contactPersonRelationship"
+               [(ngModel)]="contactPersonRelationship">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <label for="letterOfNomination">Upload your letter of nomination </label>
+        <input type="file" id="letterOfNomination" required (change)="fileChange($event,1)"
+               placeholder="Upload file" accept=".pdf,.doc,.docx,.jpg,.png">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <label for="exampleInputCv">Upload your CV</label>
+        <input type="file" id="exampleInputCv" required (change)="fileChange($event,2)" placeholder="Upload file"
+               accept=".pdf,.doc,.docx,.txt">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <label for="diploma">Upload your diploma</label>
+        <input type="file" required id="diploma" (change)="fileChange($event,3)"
+               placeholder="Upload file" accept=".pdf,.doc,.docx,.txt">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <label for="learningAgreement">Upload your learning agreement </label>
+        <input type="file" required id="learningAgreement" (change)="fileChange($event,4)"
+               placeholder="Upload file"
+               accept=".pdf,.doc,.docx">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <label for="universityRecord">Upload your university record</label>
+        <input type="file" required id="universityRecord" (change)="fileChange($event,5)"
+               placeholder="Upload file" accept=".pdf,.doc,.docx">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <label for="picture">Upload your picture</label>
+        <input type="file" required id="picture" (change)="fileChange($event,6)"
+               placeholder="Upload file"
+               accept=".pdf,.doc,.docx,.jpg,.png">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <label for="passport">Upload your Passport</label>
+        <input type="file" required id="passport" (change)="fileChange($event,7)"
+               placeholder="Upload file" accept=".pdf,.doc,.docx">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <label for="proofOfEnglishSkill">Upload your proof of english skill</label>
+        <input type="file" required id="proofOfEnglishSkill" (change)="fileChange($event,8)"
+               placeholder="Upload file" accept=".pdf,.doc,.docx">
+      </div>
+    </div>
+
+  </div>
+
+  <div class="form-group">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <label for="healthInsurance">Upload your Health Insurance</label>
+        <input type="file" required id="healthInsurance" (change)="fileChange($event,9)"
+               placeholder="Upload file" accept=".pdf,.doc,.docx">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <input type="submit" class="btn btn-primary" value="Sign Up" (click)="signUpOnProgramme()"
+           [disabled]="formNotReady()"/>
+  </div>
+
+</div>
+<div *ngIf="!currentUser">
+  <h3>Please sign in to be able to send your application</h3>
+</div>

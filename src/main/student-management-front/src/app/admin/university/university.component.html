@@ -1,0 +1,117 @@
+<button type="button" class="btn btn-primary" (click)="open(addUniversity)">უნივერსიტეტის დამატება</button>
+
+<table class="table table-striped table-hover" style="margin-top: 10px;">
+  <tr>
+    <th></th>
+    <th>სახელი</th>
+    <th>მისამართი</th>
+    <th>ქვეყანა</th>
+    <th>ინფორმაცია</th>
+    <th>რიგითობა</th>
+    <th></th>
+  </tr>
+  <tr *ngFor="let university of universities">
+    <td></td>
+    <td>{{university.name}}</td>
+    <td>{{university.address}}</td>
+    <td>{{university.country? university.country.name:''}}</td>
+    <td>{{university.info}}</td>
+    <td>{{university.orderNumber}}</td>
+    <td>
+      <i class="btn btn-default" role="button" style="padding: 0"
+         (click)="selectedUniversity = university;open(content)">
+        <span class="glyphicon glyphicon-pencil" style="width: 38px" aria-hidden="true" title="შეცვლა"></span>
+      </i>
+    </td>
+  </tr>
+</table>
+
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">უნივერსიტეტის ცვლილება</h4>
+    <button type="button" class="close" aria-label="Close" (click)="c('Close click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <div class="form-group">
+      <input class="form-control" required type="text" placeholder="name" name="name" #name="ngModel" [ngModel]=" selectedUniversity.name">
+    </div>
+    <div class="form-group">
+      <input class="form-control" required type="text" placeholder="address" name="address" #address="ngModel" [ngModel]="selectedUniversity.address">
+    </div>
+    <div class="form-group">
+      <input class="form-control" required type="text" placeholder="info" name="info" #info="ngModel" [ngModel]="selectedUniversity.info">
+    </div>
+
+    <select (change)="selectedCountryId = $event.target.value" class="form-control">
+      <option *ngFor="let c of countries" [value]="c.id" [selected]="selectedUniversity.countryId==c.id">{{c.name}}
+      </option>
+    </select>
+    <br>
+    <input class="form-control" required type="number" placeholder="რიგითობა" name="orderNumber" #orderNumber="ngModel" [ngModel]="selectedUniversity.orderNumber">
+    <br>
+    <div *ngIf="selectedUniversityEdit.result && !selectedUniversityEdit.result.success"
+         class="alert alert-danger alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        aria-hidden="true">&times;</span></button>
+      <strong>შეცდომა!</strong> ცვლილებების შენახვა ვერ მოხერხდა.
+    </div>
+
+    <div *ngIf="selectedUniversityEdit.result && selectedUniversityEdit.result.success" class="alert alert-success alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>წარმატება!</strong> ცვლილება შენახულია.
+    </div>
+
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+    <button type="button" class="btn btn-primary" [disabled]=" selectedUniversityEdit.working"
+            (click)="editUniversity(selectedUniversity.id, name.value, address.value, selectedCountryId, info.value,orderNumber.value)">Save changes
+    </button>
+  </div>
+</ng-template>
+
+
+<ng-template #addUniversity let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">უნივერსიტეტის დამატება</h4>
+    <button type="button" class="close" aria-label="Close" (click)="c('Close click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <div class="form-group">
+      <input class="form-control" required type="text" placeholder="name" name="name" #name="ngModel" [ngModel]="university.name">
+    </div>
+    <div class="form-group">
+      <input class="form-control" required type="text" placeholder="address" name="address" #address="ngModel" [ngModel]="university.address">
+    </div>
+    <div class="form-group">
+      <input class="form-control" required type="text" placeholder="info" name="info" #info="ngModel" [ngModel]="university.info">
+    </div>
+    <div class="form-group">
+      <select (change)="initialCountryId=$event.target.value" class="form-control">
+        <option *ngFor="let c of countries" [value]="c.id">{{c.name}}</option>
+      </select>
+    </div>
+    <div *ngIf="newUniversity.result && !newUniversity.result.success" class="alert alert-danger alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>შეცდომა!</strong> უნივერსიტეტის დამატება ვერ მოხერხდა.
+    </div>
+
+    <div *ngIf="newUniversity.result && newUniversity.result.success" class="alert alert-success alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>წარმატება!</strong> უნივერსიტეტი წარმატებით დაემატა.
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+    <button type="button" class="btn btn-primary" (click)="addNewUniversity(name.value, address.value, initialCountryId, info.value)">შენახვა</button>
+  </div>
+</ng-template>

@@ -1,0 +1,11 @@
+<form class="half form nice" #loginForm="ngForm" (ngSubmit)="login(loginForm.value)">
+  <div>
+    <input class="form-control" required type="email" placeholder="Email" name="username" #username="ngModel" [ngModel]="user.username">
+    <small [hidden]="username.valid || (username.pristine )">Email is required</small>
+
+    <input class="form-control" required type="password" placeholder="Password" name="password" #password="ngModel" [ngModel]="user.password">
+    <small [hidden]="password.valid || (password.pristine)"> Password is required</small>
+
+    <button [disabled]="!loginForm.valid">Log In</button>
+  </div>
+</form>

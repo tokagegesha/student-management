@@ -1,0 +1,34 @@
+<div class="container">
+  <br>
+  <div class="row">
+    <div class="col-md-2">
+      <a routerLink="/programmes" [queryParams]="{universityId: universityId,semesterId:semesterId}">
+        <button type="button" style="width: 100%" class="btn btn-default">Back</button>
+      </a>
+    </div>
+    <div class="col-md-2 col-md-offset-8">
+      <a routerLink="/candidate/registration">
+        <button type="button" style="width: 100%" class="btn btn-primary">Registration</button>
+      </a>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table table-striped table-hover">
+        <tr>
+          <th>Name</th>
+          <th>Credits</th>
+          <th>Language</th>
+          <th>Syllabus</th>
+        </tr>
+        <tr *ngFor="let subject of programmeSubjects">
+          <td>{{subject.subjectName}}</td>
+          <td>{{subject.subjectCredit}}</td>
+          <td>{{subject.subjectLanguage}}</td>
+          <td>view syllabus</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

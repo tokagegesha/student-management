@@ -1,0 +1,24 @@
+<form class="half form nice" #signupForm="ngForm" (ngSubmit)="registerUser(signupForm.value, signupForm.valid,signupForm)">
+  <div>
+    <input class="form-control" required type="email" placeholder="Email" name="email" #email="ngModel" [ngModel]="user.email">
+    <small [hidden]="email.valid || (email.pristine && !signupForm.submitted)"> Invalid email</small>
+
+    <input class="form-control" required type="text" placeholder="First Name" name="firstName" #firstName="ngModel" [ngModel]="user.firstName">
+    <small [hidden]="firstName.valid || (firstName.pristine && !signupForm.submitted)"> First name required</small>
+
+    <input class="form-control" required type="text" placeholder="Last Name" name="lastName" #lastName="ngModel" [ngModel]="user.lastName">
+    <small [hidden]="lastName.valid || (lastName.pristine && !signupForm.submitted)"> First name required</small>
+
+    <input class="form-control" required type="password" placeholder="Password" name="password" #password="ngModel" [ngModel]="user.password" validateEqual="confirmPassword" reverse="true">
+    <small [hidden]="password.valid || (password.pristine && !signupForm.submitted)"> Password is required</small>
+
+    <input class="form-control" required type="password" placeholder="Confirm Password" name="confirmPassword" #confirmPassword="ngModel" [ngModel]="user.confirmPassword" validateEqual="password">
+    <small  [hidden]="confirmPassword.valid || (confirmPassword.pristine && !signupForm.submitted)">Password mismatch</small>
+
+    <button  [disabled]="!signupForm.valid">Sign Up</button>
+  </div>
+  <br>
+  <div *ngIf="resultSuccess" class="alert alert-success alert-dismissible" role="alert">
+    <strong>you have successfully registered, activation link was sent to you email address</strong> </div>
+
+</form>

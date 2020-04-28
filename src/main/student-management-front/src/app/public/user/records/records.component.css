@@ -1,0 +1,18 @@
+.grade-outer {
+  float: left;
+  border-radius: 1em;
+  line-height: 2em;
+  padding: 0 1em;
+  position: relative;
+  margin-right: 1em;
+}
+.grade-outer > * {
+  float: left;
+}
+.grade-outer .grade .sup {
+  /*  font-size: .7em;
+        position: absolute;
+        display: table;
+        right: .2em;
+        top: 0;*/
+}

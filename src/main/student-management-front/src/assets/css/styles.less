@@ -1,0 +1,248 @@
+@LOGO-BLUE: #0072bb;
+
+my-app, registratin {
+  display: table;
+  width: 100%;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html * {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+html h1 {
+  color: #369;
+  font-size: 250%;
+}
+
+.dropdown-menu {
+  width: 100%;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 3px 1.5rem;
+  clear: both;
+  font-weight: 400;
+  color: #292b2c;
+  text-align: inherit;
+  white-space: nowrap;
+  background: none;
+  border: 0;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+  color: #fff;
+  text-decoration: none;
+  background-color: #0275d8;
+}
+
+body,
+.header,
+.header .logo,
+.header .logo > img:first-child {
+  transition-duration: 300ms;
+}
+
+@headerHeight: 124px;
+.under-header {
+  margin-top: @headerHeight;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: @headerHeight;
+  z-index: 1001;
+  background-color: @LOGO-BLUE;
+  box-shadow: inset 0 -8px 8px 4px rgba(0, 0, 0, 0.1);
+  transition-property: height;
+}
+
+.header .logo {
+  line-height: 124px;
+  transition-property: line-height;
+}
+
+.header .logo > img:first-child {
+  max-width: 111px;
+  transition-property: max-width, max-height;
+}
+
+body.scrolled-down {
+  padding-top: 62px;
+}
+
+body.scrolled-down .header {
+  height: 62px;
+}
+
+body.scrolled-down .header .logo {
+  line-height: 62px;
+}
+
+body.scrolled-down .header .logo > img:first-child {
+  max-width: 55px;
+}
+
+button.switch:focus {
+  background-color: #337ab7;
+  border-color: #2e6da4
+}
+
+.tsu-logo {
+  position: relative;
+  &:before {
+    content: '';
+    z-index: 0;
+    position: absolute;
+    width: 98%;
+    height: 98%;
+    top: 1%;
+    left: 1%;
+    background: white;
+    border-radius: 50%;
+  }
+  &:after {
+    content: '';
+    position: relative;
+    z-index: 1;
+    background: url(/assets/img/logo-tsu.svg) no-repeat;
+    background-size: contain;
+    display: block;
+    border-radius: 50%;
+    height: 0;
+    padding-bottom: 100%;
+  }
+}
+
+body {
+  .sign-up-outer {
+    background: @LOGO-BLUE;
+    min-height: 100vh;
+    .sign-up {
+      margin: 0 auto;
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: center;
+      align-items: stretch;
+      max-width: 70em;
+      padding-top: 5em;
+      .separator {
+        width: 0;
+        height: 19em;
+        align-self: center;
+        border-left: solid 1px rgba(0, 0, 0, 0);
+        box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.37);
+      }
+      .half {
+        flex: 1;
+        > div {
+          width: 70%;
+          max-width: 20em;
+          align-self: center;
+        }
+        &.logo {
+          width: 50%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          .tsu-logo {
+            width: 75%;
+            max-width: 22em;
+            align-self: center;
+          }
+        }
+        &.form {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+      }
+    }
+  }
+}
+
+.nice {
+  label {
+    float: left;
+    width: 100px;
+    line-height: 40px;
+    padding-right: 10px;
+    font-weight: 100;
+    text-align: right;
+    letter-spacing: 1px;
+  }
+  input[type=text], input[type=password], input[type=email] {
+    &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+      color: #d0d0d0;
+    }
+    &::-moz-placeholder { /* Firefox 19+ */
+      color: #d0d0d0;
+    }
+    &:-ms-input-placeholder { /* IE 10+ */
+      color: #d0d0d0;
+    }
+    &:-moz-placeholder { /* Firefox 18- */
+      color: #d0d0d0;
+    }
+    padding: 0 10px;
+    width: 100%;
+    height: 40px;
+    color: #b4ceff;
+    /*text-shadow: 1px 1px 1px black;*/
+    background: rgba(0, 0, 0, 0.16);
+    border: 0;
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.06);
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.06);
+    margin-bottom: 1.5em;
+  }
+
+  button {
+    padding: 0 10px;
+    width: 100%;
+    height: 40px;
+    color: #b4ceff;
+    /*text-shadow: 1px 1px 1px black;*/
+    background: rgba(0, 0, 0, 0.16);
+    border: 0;
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.06);
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.06);
+  }
+
+  .switcher {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2em;
+    .switch {
+      margin-left: 1em;
+      box-shadow: none;
+      &:first-child {
+        margin-left: 0;
+      }
+      &.active {
+        background: rgba(0, 0, 0, 0.36);
+        box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.06);
+        line-height: 2em;
+      }
+    }
+  }
+
+  input, button, label {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+}

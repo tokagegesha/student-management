@@ -1,0 +1,236 @@
+<button type="button" class="btn btn-primary" (click)="dataModal = {};open(addEditSemesterModal)">სემესტრის დამატება</button>
+<table class="table table-striped table-hover" style="margin-top: 10px;">
+  <tr>
+    <th></th>
+    <th>წელი-სეზონი</th>
+    <th>დაწყება-დამთავრება</th>
+    <th>აკ. რეგისტრაცია (დაწყება-დამთავრება)</th>
+    <th>ად. რეგისტრაცია (დაწყება-დამთავრება)</th>
+    <th>ხილვადი</th>
+    <th></th>
+  </tr>
+  <tr *ngFor="let semester of semesters">
+    <td></td>
+    <td>{{semester | formatSemesterName}}</td>
+    <td>({{semester.beginDate.jsdate | date: 'yyyy-dd-MM'}}) - ({{semester.endDate.jsdate | date: 'yyyy-dd-MM'}})</td>
+    <td>({{semester.academicRegBegin.jsdate | date: 'yyyy-dd-MM'}}) - ({{semester.academicRegEnd.jsdate | date: 'yyyy-dd-MM'}})</td>
+    <td>({{semester.administrationRegBegin.jsdate | date: 'yyyy-dd-MM'}}) - ({{semester.administrationRegEnd.jsdate | date: 'yyyy-dd-MM'}})</td>
+    <td>{{semester.visible==1?'ხილვადი':'არ არის ხილვადი'}}</td>
+    <td>
+      <i class="btn btn-default" role="button" style="padding: 0" (click)="addEditSubjects(semester); open(semesterSubjectsModal)">
+        <span class="glyphicon glyphicon-align-justify" style="width: 38px" aria-hidden="true" title="საგნების სია"></span>
+      </i>
+      <i class="btn btn-default" role="button" style="padding: 0" (click)="dataModal=semester; open(addEditSemesterModal)">
+        <span class="glyphicon glyphicon-pencil" style="width: 38px" aria-hidden="true" title="შეცვლა"></span>
+      </i>
+      <i class="btn btn-default" role="button" style="padding: 0" (click)="showEditSemesterUniversities(semester); open(addEditSemesterUniversities)">
+        <span class="glyphicon glyphicon-education" style="width: 38px" aria-hidden="true" title="უნივერსიტეტები"></span>
+      </i>
+    </td>
+  </tr>
+</table>
+
+
+<ng-template #addEditSemesterModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">სემესტრის დამატება</h4>
+    <button type="button" class="close" aria-label="Close" (click)="c('Close click')"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="modal-body">
+    <div class="form-horizontal">
+      <div class="form-group">
+        <label class="col-sm-6 control-label">წელი</label>
+        <div class="col-sm-3">
+          <select [(ngModel)]="dataModal.year" class="form-control">
+            <option *ngFor="let c of yearList" [value]="c">{{c}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-6 control-label">სეზონი</label>
+        <div class="col-sm-3">
+          <select [(ngModel)]="dataModal.season" class="form-control">
+            <option [value]="1">შემოდგომა</option>
+            <option [value]="2">გაზაფხული</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-6 control-label">სემესტრის დასაწყისი</label>
+        <div class="col-sm-3">
+          <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="dataModal.beginDate" required></my-date-picker>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-6 control-label">სემესტრის დასასრული</label>
+        <div class="col-sm-3">
+          <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="dataModal.endDate" required></my-date-picker>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-6 control-label">აკადემიური რეგისტრაციის დასაწყისი</label>
+        <div class="col-sm-3">
+          <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="dataModal.academicRegBegin" required></my-date-picker>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-6 control-label">აკადემიური რეგისტრაციის დასასრული</label>
+        <div class="col-sm-3">
+          <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="dataModal.academicRegEnd" required></my-date-picker>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-6 control-label">ადმინისტრაციული რეგისტრაციის დასაწყისი</label>
+        <div class="col-sm-3">
+          <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="dataModal.administrationRegBegin" required></my-date-picker>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-6 control-label">ადმინისტრაციული რეგისტრაციის დასასრული</label>
+        <div class="col-sm-3">
+          <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="dataModal.administrationRegEnd" required></my-date-picker>
+        </div>
+      </div>
+
+      <div class="form-group" *ngIf="dataModal.id">
+        <label class="col-sm-6 control-label">ხილვადობა</label>
+        <div class="col-sm-3">
+          <bSwitch [(ngModel)]="dataModal.visible" (onChangeState)="changeSemesterVisibility($event,dataModal.id)"></bSwitch>
+        </div>
+      </div>
+    </div>
+
+    <p>
+      <ngb-alert *ngIf="successMessage" type="success" (close)="successMessage = null">ცვლილება შენახულია</ngb-alert>
+    </p>
+    <p>
+      <ngb-alert *ngIf="validationMessage" type="danger" (close)="validationMessage = false">შეავსეთ ყველა ველი</ngb-alert>
+    </p>
+
+    <div *ngIf="newSemester.result && !newSemester.result.success" class="alert alert-danger alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>შეცდომა!</strong> სემესტრის დამატება ვერ მოხერხდა.
+
+    </div>
+
+    <div *ngIf="newSemester.result && newSemester.result.success" class="alert alert-success alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>წარმატება!</strong> სემესტრი წარმატებით დაემატა.
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+    <button type="button" class="btn btn-primary" (click)="addEditSemester(dataModal)">შენახვა</button>
+  </div>
+</ng-template>
+<ng-template #semesterSubjectsModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">{{selectedSemester | formatSemesterName}} | საგნების გააქტიურება</h4>
+    <button type="button" class="close" aria-label="Close" (click)="c('Close click')"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="modal-body">
+    <div class="btn-group" role="group" aria-label="...">
+      <button type="button" class="btn" [ngClass]="{'btn-default': ssFilterState===false, 'btn-success': ssFilterState}" (click)="ssFilterState = true">გააქტიურებული</button>
+      <button type="button" class="btn" [ngClass]="{'btn-default': ssFilterState, 'btn-success': !ssFilterState}" (click)="ssFilterState = false">შეჩერებული</button>
+    </div>
+    <br>
+    <div style="overflow-y: scroll;max-height: 50vh">
+      <table class="table table-striped table-hover">
+        <tr>
+          <th>სახელი</th>
+          <th>კრედიტები</th>
+          <th *ngIf="!ssFilterState">აღწერა</th>
+          <th *ngIf="ssFilterState">მინ. სტუდენტი</th>
+          <th *ngIf="ssFilterState">მაქს. სტუდენტი</th>
+          <th *ngIf="!ssFilterState"></th>
+          <th></th>
+        </tr>
+        <tr *ngFor="let item of (ssFilterState ? semesterSubjectsSelected : semesterSubjectsNotSelected)" [class.active]="item.selected">
+          <td>{{item.name}}</td>
+          <td>{{item.credits}}</td>
+          <td *ngIf="!ssFilterState">{{item.description}}</td>
+          <td *ngIf="ssFilterState"><input type="number" class="form-control" [(ngModel)]="item.minStudent" [disabled]="!item.editMode"></td>
+          <td *ngIf="ssFilterState"><input type="number" class="form-control" [(ngModel)]="item.maxStudent" [disabled]="!item.editMode"></td>
+          <td>
+            <i class="btn btn-default" role="button" *ngIf="!ssFilterState" (click)="moveToActivated(item)">
+              <span class="glyphicon glyphicon-plus-sign" aria-hidden="true" title="საგნის გააქტიურება ამ სემესტრში"></span>
+            </i>
+            <i class="btn btn-default" role="button" *ngIf="ssFilterState" (click)="deactivateSubject(item)">
+              <span class="glyphicon glyphicon-minus-sign" aria-hidden="true" title="საგნის დეაქტივაცია ამ სემესტრში"></span>
+            </i>
+            <i class="btn btn-default" role="button" *ngIf="ssFilterState && item.editMode" (click)="activateSubject(item)">
+              <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true" title="შენახვა"></span>
+            </i>
+            <i class="btn btn-default" role="button" *ngIf="item.syllabus">
+              <a href="{{item.syllabus}}" target="_blank">
+                <span class="glyphicon glyphicon-download" aria-hidden="true" title="სილაბუსის გადმოწერა"></span>
+              </a>
+            </i>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+    <!--<button type="button" class="btn btn-primary" (click)="addNewSemester(dataModal)">შენახვა</button>-->
+  </div>
+</ng-template>
+<ng-template #addEditSemesterUniversities let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">{{selectedSemester | formatSemesterName}} | უნივერსიტეტები</h4>
+    <button type="button" class="close" aria-label="Close" (click)="c('Close click')"><span aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="modal-body no-pad">
+    <div class="btn-group" role="group" aria-label="...">
+      <button type="button" class="btn" [ngClass]="{'btn-default': suFilterState===false, 'btn-success': suFilterState}" (click)="suFilterState = true">გააქტიურებული</button>
+      <button type="button" class="btn" [ngClass]="{'btn-default': suFilterState, 'btn-success': !suFilterState}" (click)="suFilterState = false">შეჩერებული</button>
+    </div>
+    <br>
+    <div style="overflow-y: scroll;max-height: 50vh">
+      <table class="table table-striped table-hover">
+        <tr>
+          <th>სახელი</th>
+          <th>ქვეყანა</th>
+          <th>მისამართი</th>
+          <th></th>
+        </tr>
+        <tr *ngFor="let item of (suFilterState ? semesterUniversitiesSelected : semesterUniversitiesNotSelected)" [class.active]="item.selected">
+          <td>{{item.name}}</td>
+          <td>{{item.countryName}}</td>
+          <td>{{item.address}}</td>
+          <!-- <td *ngIf="suFilterState"><input type="number" class="form-control" [(ngModel)]="item.minStudent" [disabled]="!item.editMode"></td>
+           <td *ngIf="suFilterState"><input type="number" class="form-control" [(ngModel)]="item.maxStudent" [disabled]="!item.editMode"></td>
+         -->
+          <td>
+            <i class="btn btn-default" role="button" *ngIf="!suFilterState" (click)="addSemesterUniversity(item)">
+              <span class="glyphicon glyphicon-plus-sign" aria-hidden="true" title="უნივერსიტეტის აქტივაცია მიმდინარე სემესტრში"></span>
+            </i>
+            <i class="btn btn-default" role="button" *ngIf="suFilterState" (click)="deactivateUniversity(item)">
+              <span class="glyphicon glyphicon-minus-sign" aria-hidden="true" title="უნივერსიტეტის დეაქტივაცია მიმდინარე სემესტრში"></span>
+            </i>
+            <i class="btn btn-default" role="button" *ngIf="suFilterState && item.editMode" (click)="activateSubject(item)">
+              <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true" title="შენახვა"></span>
+            </i>
+            <i class="btn btn-default" role="button" (click)="toggleVisibility(item)" *ngIf="suFilterState">
+              <span class="glyphicon glyphicon-eye-{{item.visible? 'open':'close'  }}" aria-hidden="true" title="{{item.visible? 'დამალვა':'გამოჩენა'}}"></span>
+            </i>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+    <!--<button type="button" class="btn btn-primary" (click)="addNewSemester(dataModal)">შენახვა</button>-->
+  </div>
+</ng-template>
+

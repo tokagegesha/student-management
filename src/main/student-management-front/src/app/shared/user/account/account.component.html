@@ -1,0 +1,19 @@
+<div class="sign-up-outer">
+  <div [hidden]="!submited">
+    <h1 style="margin: 0 auto">{{resultSuccess ? "Thank you!" : "Error"}}</h1><br>
+    <h2 style="margin: 0 auto">{{resultMessage}}</h2>
+  </div>
+  <div class="sign-up">
+    <div class="half logo">
+      <div class="tsu-logo"></div>
+    </div>
+    <div class="separator"></div>
+    <div class="half form nice">
+      <div class="switcher">
+        <a class="switch" routerLink="/login"><button class="switch" [class.active]="mode==1" (click)="mode = 1">Log In</button></a>
+        <a class="switch" routerLink="/sign-up"><button class="switch" [class.active]="mode==2" (click)="mode = 2">Sign Up</button></a>
+      </div>
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

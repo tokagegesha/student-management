@@ -1,0 +1,201 @@
+<button type="button" class="btn btn-primary" (click)="open(addProgrammeTemplate)">პროგრამის დამატება</button>
+
+<table class="table table-striped table-hover" style="margin-top: 10px;">
+  <tr>
+    <th>N</th>
+    <th>დასახელება</th>
+    <th>სწავლის საფეხური</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <tr *ngFor="let programme of programmes">
+    <td>{{programme.orderNumber}}</td>
+    <td>{{programme.name}}</td>
+    <td>{{getDegreeName(programme.degree)}}</td>
+    <td>
+      <i class="btn btn-default" role="button" style="padding: 0" (click)="selectedProgramme = programme;getProgrammeSubjects(selectedProgramme);open(openSubjectList)">
+        <span class="glyphicon glyphicon-align-justify" style="width: 38px" aria-hidden="true" title="საგნების სია"></span>
+      </i>
+
+      <i class="btn btn-default" role="button" style="padding:0;margin-left: 8px" (click)="selectedProgramme = programme;open(openProgrammeEdit)">
+        <span class="glyphicon glyphicon-pencil" style="width: 38px" aria-hidden="true" title="შეცვლა"></span>
+      </i>
+
+      <i class="btn btn-default" role="button" style="padding:0;margin-left: 8px" (click)="deleteProgramme(programme)">
+        <span class="glyphicon glyphicon-remove" style="width: 38px" aria-hidden="true" title="წაშლა"></span>
+      </i>
+    </td>
+  </tr>
+</table>
+
+
+<ng-template #openSubjectList let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">პროგრამაში არსებული საგნები</h4>
+    <button type="button" class="close" aria-label="Close" (click)="c('Close click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h3 class="center-title">{{selectedProgramme.name}}</h3>
+
+    <p>
+      <button type="button" class="btn btn-outline-primary" (click)="isCollapsed = !isCollapsed;getSemesterList()"
+              [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">საგნის დამატება
+      </button>
+    </p>
+    <p>
+      <ngb-alert *ngIf="successMessage" type="success" (close)="successMessage = null">ცვლილება შენახულია</ngb-alert>
+    </p>
+    <p>
+      <ngb-alert *ngIf="errorMessage" type="danger" (close)="errorMessage = null">ცვლილების შენახვა ვერ მოხერხდა
+      </ngb-alert>
+    </p>
+
+    <div id="collapseExample" [ngbCollapse]="isCollapsed">
+      <div class="card-body">
+        <div class="no-padding col-md-7" style="position: relative;display: flex; padding-left: 0px">
+          <ng-autocomplete (selected)="selectedSubjectChanged($event.item)" [classes]="['']" [group]="group" style="width: 100%"></ng-autocomplete>
+        </div>
+        <div class="no-padding col-md-5" style="position: relative;display: flex;padding-left: 0px">
+          <select [ngModel]="selectedSemester" class="form-control col-md-5 selector-margin">
+            <option *ngFor="let semester of semesters" [value]="semester">{{semester | formatSemesterName:'ge'}}</option>
+          </select>
+
+        </div>
+      </div>
+
+      <div *ngIf="selectedSubjectForAdd" class="subject-auto-complete-result-button" (click)="addProgrammeSubject(selectedProgramme.id,selectedSemester.id,selectedSubjectForAdd.id)">
+        <button type="button" class="btn btn-success">დამატება</button>
+      </div>
+    </div>
+
+    <table class="table table-striped table-hover" style="margin-top: 10px;">
+      <tr>
+        <th>დასახელება</th>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr *ngFor="let prSubject of programmeSubjects">
+        <td>{{prSubject.subject.name}}</td>
+        <td>{{prSubject.semester.year + ' - ' + (prSubject.semester.year + 1) + ' ' + (prSubject.semester.season == 1 ? ' შემოდგომა ' : ' გაზაფხული ')}}</td>
+        <td>
+          <i class="btn btn-default" role="button" style="padding: 0" (click)="selectedProgrammeSubject =prSubject; deleteProgrammeSubject(selectedProgrammeSubject.id)">
+            <span class="glyphicon glyphicon-remove" style="width: 38px" aria-hidden="true" title="საგნების ამოშლა"></span>
+          </i>
+        </td>
+      </tr>
+
+    </table>
+    <br>
+
+    <div *ngIf="newProgrammeSubject.result && !newProgrammeSubject.result.success" class="alert alert-danger alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>შეცდომა!</strong> საგნის დამატება ვერ მოხერხდა.
+    </div>
+
+    <div *ngIf="newProgrammeSubject.result && newProgrammeSubject.result.success"
+         class="alert alert-success alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        aria-hidden="true">&times;</span></button>
+      <strong>წარმატება!</strong> საგანი წარმატებით დაემატა.
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+    <!--  <button type="button"
+              class="btn btn-primary"
+              (click)="addNewSubject(name.value,selectedCredits)">
+        შენახვა
+      </button>-->
+  </div>
+</ng-template>
+
+<ng-template #openProgrammeEdit let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">პროგრამის რედაქტირება</h4>
+    <button type="button" class="close" aria-label="Close" (click)="c('Close click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+
+    <input class="form-control" required type="text" placeholder="name" name="name" #name="ngModel" [ngModel]="selectedProgramme.name">
+    <br>
+    <select (change)="selectedProgramme.degree= $event.target.value" class="form-control">
+      <option *ngFor="let degree of [1,2]" [value]="degree" [selected]="selectedProgramme.degree==degree">{{getDegreeName(degree)}}</option>
+    </select>
+    <br>
+    <input class="form-control" required type="number" placeholder="რიგითობა" name="orderNumber" #orderNumber="ngModel" [ngModel]="selectedProgramme.orderNumber">
+    <br>
+    <div *ngIf="editProgrammeSelected.result && !editProgrammeSelected.result.success" class="alert alert-danger alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>შეცდომა!</strong> საგნის რედაქტირება ვერ მოხერხდა.
+    </div>
+
+    <div *ngIf="editProgrammeSelected.result && editProgrammeSelected.result.success"
+         class="alert alert-success alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        aria-hidden="true">&times;</span></button>
+      <strong>წარმატება!</strong> ცვლილება შენახულია.
+    </div>
+
+
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+    <button type="button" class="btn btn-primary" (click)="editProgramme(selectedProgramme.id, name.value, selectedProgramme.degree, orderNumber.value); c('Close click')">
+      შენახვა
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #addProgrammeTemplate let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">პროგრამის დამატება</h4>
+    <button type="button" class="close" aria-label="Close" (click)="c('Close click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <input class="form-control" required type="text" placeholder="name" name="name" #name="ngModel"
+           [ngModel]="programme.name">
+
+    <br>
+    <select (change)="programme.degree= $event.target.value" class="form-control">
+      <option *ngFor="let credit of [1,2]" [value]="credit">{{getDegreeName(credit)}}
+      </option>
+    </select>
+    <br>
+
+    <div *ngIf="newProgramme.result && !newProgramme.result.success"
+         class="alert alert-danger alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        aria-hidden="true">&times;</span></button>
+      <strong>შეცდომა!</strong> საგნის დამატება ვერ მოხერხდა.
+    </div>
+
+    <div *ngIf="newProgramme.result && newProgramme.result.success"
+         class="alert alert-success alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        aria-hidden="true">&times;</span></button>
+      <strong>წარმატება!</strong> საგანი წარმატებით დაემატა.
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+    <button type="button"
+            class="btn btn-primary"
+            (click)="addProgramme(name.value,programme.degree)">
+      შენახვა
+    </button>
+  </div>
+</ng-template>
+
+
+

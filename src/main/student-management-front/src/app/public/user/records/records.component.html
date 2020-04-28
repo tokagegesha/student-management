@@ -1,0 +1,24 @@
+<table class="table table-striped table-hover" style="margin-top: 10px;">
+  <tr>
+    <th>Subject name</th>
+    <th>Programme name</th>
+    <th>Grades</th>
+    <th>Sum</th>
+    <th></th>
+  </tr>
+  <tr *ngFor="let record of records;">
+    <td>{{record.subjectName}}</td>
+    <td>{{record.programmeName}}</td>
+    <td>
+      <div class="grade-outer label label-success grade" *ngFor="let grade of record.grades" title="{{grade.gradeName}}">
+        <span class="grade">{{grade.grade || '-'}} <sup>/{{grade.maxGrade}}</sup></span>
+      </div>
+    </td>
+    <td>{{record.gradeSum}}/{{record.maxGradeSum}}</td>
+    <td>
+     <!-- <i class="btn btn-default" role="button" style="padding: 0">
+        <span class="glyphicon glyphicon-remove" style="width: 38px" aria-hidden="true" title="შეცვლა"></span>
+      </i>-->
+    </td>
+  </tr>
+</table>

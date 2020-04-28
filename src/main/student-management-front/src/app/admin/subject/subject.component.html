@@ -1,0 +1,128 @@
+<button type="button" class="btn btn-primary" (click)="open(addSubject)">საგნის დამატება</button>
+
+<table class="table table-striped table-hover" style="margin-top: 10px;">
+  <tr>
+    <th>დასახელება</th>
+    <th>კრედიტი</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <tr *ngFor="let subject of subjects">
+    <td>{{subject.name}}</td>
+    <td>{{subject.credits}}</td>
+    <td>
+      <i class="btn btn-default" role="button" style="padding: 0"
+         (click)="selectedSubject = subject;open(openSubjectEdit)">
+        <span class="glyphicon glyphicon-pencil" style="width: 38px" aria-hidden="true" title="შეცვლა"></span>
+      </i>
+    </td>
+    <td>
+      <i class="btn btn-default" role="button" style="padding: 0" (click)="deleteSubject(subject)">
+        <span class="glyphicon glyphicon-remove" style="width: 38px" aria-hidden="true" title="საგნის წასშლა"></span>
+      </i>
+    </td>
+  </tr>
+  <div *ngIf="subjects">
+    <ngb-pagination [collectionSize]="totalCount" [(page)]="page" [maxSize]="5" [pageSize]="pageLimit" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+  </div>
+</table>
+
+<ng-template #addSubject let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">საგნის დამატება</h4>
+    <button type="button" class="close" aria-label="Close" (click)="c('Close click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <input class="form-control" required type="text" placeholder="name" name="name" #name="ngModel"
+           [ngModel]="subject.name">
+
+    <br>
+    <select (change)="selectedCredits= $event.target.value" class="form-control">
+      <option *ngFor="let credit of subCredits" [value]="credit">{{credit}}
+      </option>
+    </select>
+    <br>
+
+    <select (change)="selectedSubjectLanguage= $event.target.value" class="form-control">
+      <option *ngFor="let leng of subjectLanguages" [value]="leng">{{leng}}
+      </option>
+    </select>
+
+
+    <div *ngIf="newSubject.result && !newSubject.result.success"
+         class="alert alert-danger alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        aria-hidden="true">&times;</span></button>
+      <strong>შეცდომა!</strong> საგნის დამატება ვერ მოხერხდა.
+    </div>
+
+    <div *ngIf="newSubject.result && newSubject.result.success"
+         class="alert alert-success alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        aria-hidden="true">&times;</span></button>
+      <strong>წარმატება!</strong> საგანი წარმატებით დაემატა.
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+    <button type="button"
+            class="btn btn-primary"
+            (click)="addNewSubject(name.value,selectedCredits,selectedSubjectLanguage)">
+      შენახვა
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #openSubjectEdit let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">საგნის რედაქტირება</h4>
+    <button type="button" class="close" aria-label="Close" (click)="c('Close click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <input class="form-control" required type="text" placeholder="name" name="name" #name="ngModel"
+           [ngModel]="selectedSubject.name">
+
+    <br>
+
+    <select (change)="selectedSubject.credits= $event.target.value" class="form-control">
+      <option *ngFor="let credit of subCredits" [value]="credit" [selected]="selectedSubject.credits==credit">{{credit}}
+      </option>
+    </select>
+    <br>
+
+    <select (change)="selectedSubject.language= $event.target.value" class="form-control">
+      <option *ngFor="let leng of subjectLanguages" [value]="leng" [selected]="selectedSubject.language==leng">{{leng}}
+      </option>
+    </select>
+
+    <div *ngIf="selectedSubjectEdit.result && !selectedSubjectEdit.result.success"
+         class="alert alert-danger alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        aria-hidden="true">&times;</span></button>
+      <strong>შეცდომა!</strong> საგნის რედაქტირება ვერ მოხერხდა.
+    </div>
+
+    <div *ngIf="selectedSubjectEdit.result && selectedSubjectEdit.result.success"
+         class="alert alert-success alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        aria-hidden="true">&times;</span></button>
+      <strong>წარმატება!</strong> ცვლილება შენახულია.
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+    <button type="button"
+            class="btn btn-primary"
+            (click)="editSubject(selectedSubject.id,name.value,selectedSubject.credits,selectedSubject.language)">
+      შენახვა
+    </button>
+  </div>
+</ng-template>

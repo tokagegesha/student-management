@@ -1,0 +1,44 @@
+<div class="body">
+  <div class="header admin">
+    <div class="logo">
+      <a [href]="'/admin'">
+        <img class="logo-image" src="/assets/img/logo_tsu.png">
+        <span class="logo-title">ივანე ჯავახიშვილის სახელობის<br>თბილისის სახელმწიფო უნივერსიტეტი</span>
+      </a>
+    </div>
+
+    <div class="auth">
+      <div *ngIf="!user">
+        <a routerLink="/login">Sign In</a> | <a routerLink="/sign-up">Sign Up</a>
+      </div>
+      <div *ngIf="user">
+        <p class="white-text">{{user.firstName}} {{user.lastName}}</p> <a (click)="logout()" style="cursor: pointer"><p class="white-text">Log out</p></a>
+      </div>
+    </div>
+  </div>
+  <div class="work-flow">
+    <nav class="navbar navbar-default sidebar" role="navigation">
+      <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li [routerLinkActive]="['active']"><a [routerLink]="['home']">მთავარი<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a></li>
+          <li [routerLinkActive]="['active']"><a [routerLink]="['candidates']">კანდიდატები<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-tags"></span></a></li>
+          <li [routerLinkActive]="['active']"><a [routerLink]="['universities']">უნივერსიტეტები<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a></li>
+          <li [routerLinkActive]="['active']"><a [routerLink]="['exchangeProgrammes']">გაცვლითი პროგრამები<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a></li>
+          <li [routerLinkActive]="['active']"><a [routerLink]="['subjects']">საგნები<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a></li>
+          <li [routerLinkActive]="['active']"><a [routerLink]="['programmes']">პროგრამები<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a></li>
+          <li [routerLinkActive]="['active']"><a [routerLink]="['semesters']">სემესტრები<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a></li>
+          <li [routerLinkActive]="['active']"><a [routerLink]="['grades']">ქულები<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a></li>
+          <li [routerLinkActive]="['active']"><a [routerLink]="['homepageEditor']">მთავარი გვერდი<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div style="width: calc(100% - 236px);float: left;height: 100%;">
+      <div class="container-fluid">
+        <br>
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+
+  </div>
+</div>

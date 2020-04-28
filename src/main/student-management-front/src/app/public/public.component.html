@@ -1,0 +1,27 @@
+<div class="public header">
+  <div class="container">
+    <div class="wrapper">
+      <div class="logo">
+        <a [href]="'/'">
+          <img class="logo-image" src="/assets/img/logo_tsu.png">
+          <span class="logo-title">Ivane Javakhishvili<br>Tbilisi State University</span>
+        </a>
+      </div>
+      <div style="color: #e85a55;font-size: 0.6cm;text-align: right;float: right;position: absolute;right: 30px;">
+        Test Mode
+      </div>
+      <div class="auth">
+        <div *ngIf="!user">
+          <a routerLink="/login">Sign In</a> | <a routerLink="/sign-up">Sign Up</a>
+        </div>
+        <div *ngIf="user">
+          <p class="white-text"><a routerLink="/user/profile">{{user.firstName}} {{user.lastName}}</a></p> <a (click)="logout()" style="cursor: pointer"><p class="white-text">Log out</p></a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div class="container under-header">
+  <router-outlet></router-outlet>
+</div>

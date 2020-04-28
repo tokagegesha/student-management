@@ -1,0 +1,12 @@
+.user-data{
+  width: inherit;
+  position: absolute;
+  z-index: 1006;
+  text-align: right;
+  padding-top: 24px;
+
+}
+.white-text{
+  font-family: "Times New Roman";
+  color: white;
+}

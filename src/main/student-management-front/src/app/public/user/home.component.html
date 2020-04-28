@@ -1,0 +1,10 @@
+<div class="container">
+  <br>
+  <ul class="nav nav-tabs">
+    <li role="presentation" [routerLinkActive]="['active']"><a routerLink="/user/profile" queryParamsHandling="merge">Profile</a></li>
+    <li role="presentation" [routerLinkActive]="['active']"><a routerLink="/user/records" queryParamsHandling="merge">Records</a></li>
+    <li role="presentation" [routerLinkActive]="['active']"><a routerLink="/user/subjects" queryParamsHandling="merge">Subject</a></li>
+    <li role="presentation" [routerLinkActive]="['active']"><a routerLink="/user/exams" queryParamsHandling="merge">Exams</a></li>
+  </ul>
+  <router-outlet></router-outlet>
+</div>

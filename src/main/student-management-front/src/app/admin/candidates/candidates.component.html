@@ -1,0 +1,217 @@
+<nav class="navbar navbar-default">
+  <div class="col-sm-12">
+    <div class="navbar-form navbar-left" style="padding-left: 0;" role="search">
+      <div class="btn-group" style=" margin-right: 10px;">
+        <button class="btn btn-primary switch" [class.active]="statusFilter['1']" (click)="updateStatusFilter(1)">
+          მომლოდინე
+        </button>
+        <button class="btn btn-primary switch" [class.active]="statusFilter['2']" (click)="updateStatusFilter(2)">
+          დადასტურებული
+        </button>
+        <button class="btn btn-primary switch" [class.active]="statusFilter['3']" (click)="updateStatusFilter(3)">
+          უარყოფილი
+        </button>
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="ძებნა" (input)="updateCandidatesTable()"
+               [(ngModel)]="searchParams.searchString">
+      </div>
+    </div>
+  </div>
+</nav>
+<table class="table table-striped table-hover" *ngIf="candidatesList.length" style="margin-top: 10px;">
+  <tr>
+    <th></th>
+    <th></th>
+    <th>სახელი</th>
+    <th>გვარი</th>
+    <th>ელ. ფოსტა</th>
+    <th>უნივერსიტეტი</th>
+    <th>რეგ. თარიღი</th>
+    <th>სემესტრი</th>
+    <th></th>
+  </tr>
+  <tr *ngFor="let candidate of candidatesList">
+    <td><span  style="font-size: 20px" class="glyphicon {{typeDict['' + candidate.status].cssClass}}" title="{{typeDict[candidate.status].name}}"
+              [ngStyle]="typeDict[candidate.status].style"></span></td>
+
+    <td><span class="glyphicon glyphicon-home" style="font-size: 20px"
+              [ngStyle]="accommodationDict[candidate.accommodation===true ? '1':'2'].style"></span></td>
+    <td>{{candidate.firstName}}</td>
+    <td>{{candidate.lastName}}</td>
+    <td>{{candidate.email}}</td>
+    <!--<td>{{candidate.semesterYear + ' - ' + (candidate.semesterYear + 1) + ' ' + (candidate.semesterSeason == 1 ?
+      'Autumn' : 'Spring')}}
+    </td>-->
+    <td>{{candidate.universityName}}</td>
+    <td>{{candidate.registrationDate | formatDate: true: true}}</td>
+    <td>
+      <div *ngFor="let semester of candidate.semesters">
+        <div>{{semester | formatSemesterName}}</div>
+      </div>
+    </td>
+    <td>
+      <a href="http://localhost:8081/api/student/acceptance/generate/{{candidate.id}}" class="btn btn-default" role="button"
+         style="padding: 0">
+        <span class="glyphicon glyphicon-floppy-save" style="width: 38px" aria-hidden="true" title="გადმოწერა"></span>
+      </a>
+      <a href="http://localhost:8081/api/student/file/get/{{candidate.id}}" class="btn btn-default" role="button"
+         style="padding: 0">
+        <span class="glyphicon glyphicon-paperclip" style="width: 38px" aria-hidden="true" title="გადმოწერა"></span>
+      </a>
+      <i class="btn btn-default" role="button" style="padding: 0" (click)="selectedCandidate=candidate; open(content)">
+        <span class="glyphicon glyphicon-pencil" style="width: 38px" aria-hidden="true" title="შეცვლა"></span>
+      </i>
+    </td>
+  </tr>
+</table>
+<div class="row" *ngIf="candidatesPaging">
+
+  <div class="col-xs-12 col-sm-12 col-md-12">
+    <div style="float: right">
+      <div class="input-group" style="float: left; width: 100px; margin-right: 20px;">
+        <span class="input-group-addon" title="Rows per page"><i class="glyphicon glyphicon-th-list"></i></span>
+        <input id="rows_per_page_demo_pag1" type="text" class="form-control small-input" title="Rows per page"
+               [(ngModel)]="candidatesPaging.size" (input)="updateCandidatesTable()">
+      </div>
+      <div class="input-group" style="float: left; width: 100px; margin-right: 20px;">
+        <span class="input-group-addon" title="Go to page"><i class="glyphicon glyphicon-arrow-right"></i></span>
+        <input id="goto_page_demo_pag1" type="text" class="form-control small-input" title="Go to page"
+               [(ngModel)]="candidatesPaging.page" (input)="updateCandidatesTable()">
+      </div>
+      <div class="input-group" style="float: left; margin-right: 6px;">
+        <span class="input-group-addon" title="Go to page" style="float: left; padding: 8px 25px 8px 12px;"><i
+          class="glyphicon glyphicon-arrow-right"></i></span>
+        <span class="form-control small-input" aria-label="Go to page" aria-hidden="true"
+              style="width: auto; float: left;">{{(candidatesPaging.page-1)*candidatesPaging.size+1}}-{{(candidatesPaging.page-1)*candidatesPaging.size+candidatesList.length}} / {{candidatesPaging.totalCount}}</span>
+      </div>
+
+      <div aria-label="Page navigation" style="float: left; display: table; ">
+        <ul id="nav_list_demo_pag1" class="pagination pagination_custom" unselectable="on"
+            style="user-select: none; margin: 0;">
+          <li [class.disabled]="candidatesPaging.isFirst">
+            <span *ngIf="candidatesPaging.isFirst" aria-hidden="true">წინა</span>
+            <span *ngIf="!candidatesPaging.isFirst"
+                  (click)="candidatesPaging.page=candidatesPaging.page - 1; updateCandidatesTable()" aria-hidden="true">წინა</span>
+          </li>
+
+          <li *ngFor="let page of candidatesPaging.pagesBefore"
+              (click)="candidatesPaging.page=page; updateCandidatesTable()"><span>{{page}}</span></li>
+          <li class="active"><span>{{candidatesPaging.page}}</span></li>
+          <li *ngFor="let page of candidatesPaging.pagesAfter"
+              (click)="candidatesPaging.page=page; updateCandidatesTable()"><span>{{page}}</span></li>
+
+          <li [class.disabled]="candidatesPaging.isLast">
+            <span *ngIf="candidatesPaging.isLast" aria-hidden="true">მომდევნო</span>
+            <span *ngIf="!candidatesPaging.isLast"
+                  (click)="candidatesPaging.page=candidatesPaging.page + 1; updateCandidatesTable()" aria-hidden="true">მომდევნო</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!--
+      <div class="col-xs-6 col-sm-4 col-md-1 row-space">
+      </div>
+
+      <div class="col-xs-6 col-sm-4 col-md-1 row-space">
+      </div>-->
+</div>
+
+<!-- Modal -->
+
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">სტატუსის ცვლილება</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <select (change)="selectedCandidateStatus = $event.target.value" class="form-control">
+        <option *ngFor="let type of [1,2,3]" [value]="type"
+                [attr.selected]="type === selectedCandidate.status ? true : null">{{typeDict[type].name}}
+        </option>
+      </select>
+      <div *ngIf="selectedCandidateStatus == 2 && selectedCandidate.status !=2">
+        <br>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <label for="exampleInputLA">დადასტურების დოკუმენტის ატვირთვა</label>
+            <input type="file" id="exampleInputLA" required placeholder="Upload file" (change)="chooseFile($event)"
+                   accept=".pdf,.doc,.docx,.txt">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <textarea class="form-control" [(ngModel)]="rejectMessage" *ngIf="selectedCandidateStatus == 3"
+                placeholder="მიუთითეთ მიზეზი, რომელსაც კანდიდატი ელ. ფოსტით მიიღებს"></textarea>
+    </div>
+
+    <div *ngIf="letterOfAcceptanceRequired" class="alert alert-danger alert-dismissible" role="alert">
+      <strong>შეცდომა!</strong> დოკუმენტი სავალდებულოა
+    </div>
+
+  </div>
+
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+    <button type="button" class="btn btn-primary"
+            [disabled]="selectedCandidateStatus == selectedCandidate.status || selectedCandidateEdit.working"
+            (click)="editCandidateStatus(selectedCandidate.id, selectedCandidateStatus, rejectMessage,letterOfAcceptance)">
+      Save changes
+    </button>
+
+  </div>
+</ng-template>
+
+
+<!--
+<div class="modal fade" id="candidateEditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" *ngIf="selectedCandidate">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+          aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{selectedCandidate.firstName}} {{selectedCandidate.lastName}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>სტატუსი</label>
+          <select (change)="selectedCandidateStatus = $event.target.value" class="form-control">
+            <option *ngFor="let type of [1,2,3]" [value]="type"
+                    [attr.selected]="type === selectedCandidate.status ? true : null">{{typeDict[type].name}}
+            </option>
+          </select>
+        </div>
+
+        <div *ngIf="selectedCandidateEdit.result && !selectedCandidateEdit.result.success"
+             class="alert alert-danger alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>
+          <strong>შეცდომა!</strong> ცვლილებების შენახვა ვერ მოხერხდა.
+        </div>
+
+        <div *ngIf="selectedCandidateEdit.result && selectedCandidateEdit.result.success"
+             class="alert alert-success alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>
+          <strong>წარმატება!</strong> ცვლილება შენახულია.
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary"
+                [disabled]="selectedCandidateStatus == selectedCandidate.status || selectedCandidateEdit.working"
+                (click)="editCandidateStatus(selectedCandidate.id, selectedCandidateStatus)">Save changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+-->

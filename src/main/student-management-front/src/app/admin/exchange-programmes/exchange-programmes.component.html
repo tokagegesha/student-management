@@ -1,0 +1,82 @@
+<button type="button" class="btn btn-primary" (click)="dataModal = {};open(addEditExchangeProgrammeModal)">გაცვლითი
+  პროგრამის დამატება
+</button>
+<table class="table table-striped table-hover" style="margin-top: 10px;">
+  <tr>
+    <th>სახელი</th>
+    <th>მეტა ინფორმაცია</th>
+    <th></th>
+  </tr>
+  <tr *ngFor="let programme of exchangeProgrammes">
+    <td>{{programme.name}}</td>
+    <td>{{programme.note}}</td>
+    <td>
+      <i class="btn btn-default" role="button" style="padding: 0"
+         (click)="dataModal=programme; open(addEditExchangeProgrammeModal)">
+        <span class="glyphicon glyphicon-pencil" style="width: 38px" aria-hidden="true" title="შეცვლა"></span>
+      </i>
+      <i class="btn btn-default" role="button" style="padding: 0" (click)="deleteExchPro(programme)">
+        <span class="glyphicon glyphicon-remove" style="width: 38px" aria-hidden="true" title="საგნის წასშლა"></span>
+      </i>
+    </td>
+  </tr>
+</table>
+
+
+<ng-template #addEditExchangeProgrammeModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">გაცვლითი პროგრამის დამატება</h4>
+    <button type="button" class="close" aria-label="Close" (click)="c('Close click')"><span
+      aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="modal-body">
+    <div class="form-horizontal">
+      <div class="form-group">
+        <label class="col-sm-6 control-label">სახელი</label>
+        <div class="col-sm-3">
+          <input [(ngModel)]="dataModal.name" class="form-control" name="exchangeProgrammeName">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-6 control-label">მეტა ინფორმაცია</label>
+        <div class="col-sm-3">
+          <input [(ngModel)]="dataModal.note" class="form-control" name="exchangeProgrammeNote">
+        </div>
+      </div>
+      <div class="form-group" *ngIf="dataModal.id">
+        <label class="col-sm-6 control-label">რიგითობა</label>
+        <div class="col-sm-3">
+          <input class="form-control" required type="number" placeholder="რიგითობა" name="orderNumber" [(ngModel)]="dataModal.orderNumber">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p>
+    <ngb-alert *ngIf="successMessage" type="success" (close)="successMessage = null">ცვლილება შენახულია</ngb-alert>
+  </p>
+  <p>
+    <ngb-alert *ngIf="validationMessage" type="danger" (close)="validationMessage = false">შეავსეთ ყველა ველი
+    </ngb-alert>
+  </p>
+
+  <div *ngIf="newExchangeProgramme.result && !newExchangeProgramme.result.success"
+       class="alert alert-danger alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+      aria-hidden="true">&times;</span></button>
+    <strong>შეცდომა!</strong> დამატება ვერ მოხერხდა.
+
+  </div>
+
+  <div *ngIf="newExchangeProgramme.result && newExchangeProgramme.result.success"
+       class="alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+      aria-hidden="true">&times;</span></button>
+    <strong>წარმატება!</strong> წარმატებით დაემატა.
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
+    <button type="button" class="btn btn-primary" (click)="addEditExchangeProgramme(dataModal)">შენახვა</button>
+  </div>
+</ng-template>

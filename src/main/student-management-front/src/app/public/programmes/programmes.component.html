@@ -1,0 +1,57 @@
+{{activationMessage}}
+
+<div class="container-fluid">
+  <div class="container">
+    <h1>Subject List</h1>
+    <p>
+      Choose your university and exchange semester, to view suggested subjects grouped by programmes<br>
+     <!-- If your university is not in list, unfortunately we cannot suggest exchange.-->
+    </p>
+    <div class="row">
+      <div class="col-md-6">
+        <!--  <div class="form-group">
+              <label>Choose university</label>
+              <select class="form-control"
+                      [(ngModel)]="selectedUniversity"
+                      (change)="updateProgrammes()">
+                  <option *ngFor="let uni of universities" [ngValue]="uni">{{uni.name}}</option>
+              </select>
+          </div>-->
+        <div class="form-group" style="position: relative">
+          <ng-autocomplete (selected)="Selected($event)" [classes]="['']" [group]="group" ></ng-autocomplete>
+        </div>
+
+
+        <div class="form-group" style="position: relative">
+          <select class="form-control" [disabled]="!selectedUniversity" [(ngModel)]="selectedSemester"
+                  (ngModelChange)="loadProgrammes(selectedUniversity.id, selectedSemester.id)">
+            <option *ngFor="let semester of semesters" [ngValue]="semester">{{semester | formatSemesterName}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row" *ngIf="selectedUniversity && selectedSemester">
+      <div class="col-md-12">
+        <p *ngIf="!universityProgrammes.length">No active programmes for this university</p>
+        <table class="table table-striped table-hover" *ngIf="universityProgrammes.length">
+          <tr>
+            <th>Programme Name</th>
+            <th>Type</th>
+            <th></th>
+          </tr>
+          <tr *ngFor="let uniProgramme of universityProgrammes">
+            <td>{{uniProgramme.name}}</td>
+            <td>{{uniProgramme.type == 1 ? 'Bachelor' : 'Masters'}}</td>
+            <td><a [routerLink]="['/programme', uniProgramme.id, 'semester', selectedSemester.id]" [queryParams]="{universityId: selectedUniversity.id}">view</a></td>
+          </tr>
+        </table>
+        <button type="button" class="btn btn-primary">
+          <a class="no-underline" [routerLink]="['/candidate/registration']"
+             [queryParams]="{'uniId': selectedUniversity.id}">registration</a>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

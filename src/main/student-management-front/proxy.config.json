@@ -1,0 +1,14 @@
+{
+  "/api": {
+    "target": "http://localhost:8081",
+    "secure": false
+  },
+ "/unsecured": {
+    "target": "http://localhost:8081",
+    "secure": false
+  },
+ "/file": {
+    "target": "http://localhost:8081",
+    "secure": false
+  }
+}

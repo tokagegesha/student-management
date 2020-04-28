@@ -1,0 +1,45 @@
+<div *ngIf="initialContentLoaded">
+  <simple-tiny [elementId]="'my-editor-id'" (onEditorKeyup)="keyupHandlerFunction($event)" initialContent="{{initialContent}}"></simple-tiny>
+</div>
+<div>
+  <input type="text" #clipboardArea id="clipboardAreaId" style="width: 1px; height: 1px; overflow: hidden; border: none; opacity: 0">
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>ფაილის სახელი</th>
+      <th>ბმული</th>
+      <th>
+        <input [hidden]="newAttachments.length !== 0" #attachmentButton type="file" required id="attachments" (change)="fileChange($event)" placeholder="დამატება" accept="*.*">
+        <button type="button" class="btn btn-success" *ngIf="newAttachments.length > 0" (click)="uploadNewAttachments()" multiple>ატვირთვა</button>
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let attachment of newAttachments; let i = index">
+      <td>{{attachment.name}}</td>
+      <td>{{attachment.path}}</td>
+      <td>
+        <i (click)="deleteNewAttachment(i)" class="btn btn-default" role="button" style="padding: 0 ;margin-right: 20%">
+          <span class="glyphicon glyphicon-remove" style="width: 38px" aria-hidden="true" title="წაშლა"></span>
+        </i>
+      </td>
+    </tr>
+    <tr *ngFor="let attachment of attachments; let i = index">
+      <td>/file/original/{{attachment.path}}</td>
+      <td>{{attachment.name}}</td>
+      <td>
+        <i (click)="copyToClipboard('/file/original/' + attachment.path)" class="btn btn-default" role="button" style="padding: 0 ;margin-right: 20%">
+          <span class="glyphicon glyphicon-copy" style="width: 38px" aria-hidden="true" title="კოპირება"></span>
+        </i>
+        <i (click)="deleteAttachment(i)" class="btn btn-default" role="button" style="padding: 0 ;margin-right: 20%">
+          <span class="glyphicon glyphicon-remove" style="width: 38px" aria-hidden="true" title="წაშლა"></span>
+        </i>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div style="display: flex; justify-content: flex-end; margin-top: 2em">
+  <button style="width: 200px" [disabled]="!homepagehtmlModel" (click)="editHomepage()" class="form-control">შენახვა</button>
+</div>
