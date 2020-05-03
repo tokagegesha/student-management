@@ -1,11 +1,12 @@
 package ge.gov.tsu.studentmanagement.service;
 
 import ge.gov.tsu.studentmanagement.apiutils.file.FileUtil;
+import ge.gov.tsu.studentmanagement.dto.SemesterUniversityDTO;
+import ge.gov.tsu.studentmanagement.dto.SubjectReleaseDTO;
 import ge.gov.tsu.studentmanagement.entity.ProgrammeSubject;
 import ge.gov.tsu.studentmanagement.entity.Subject;
 import ge.gov.tsu.studentmanagement.entity.SubjectGrade;
 import ge.gov.tsu.studentmanagement.entity.SubjectReleased;
-import ge.gov.tsu.studentmanagement.entity.view.SubjectReleaseExtended;
 import ge.gov.tsu.studentmanagement.exception.TsuException;
 import ge.gov.tsu.studentmanagement.pojo.ProgrammeSubjectPojo;
 import ge.gov.tsu.studentmanagement.pojo.SubjectPojo;
@@ -13,7 +14,7 @@ import ge.gov.tsu.studentmanagement.pojo.SubjectReleasedPojo;
 import ge.gov.tsu.studentmanagement.repository.*;
 import ge.gov.tsu.studentmanagement.rest.request.ActionPerformer;
 import ge.gov.tsu.studentmanagement.rest.request.RequestObject;
-import ge.gov.tsu.studentmanagement.specification.view.SubjectReleaseExtendedSpecification;
+import ge.gov.tsu.studentmanagement.specification.view.SubjectReleasedSpecification;
 import ge.gov.tsu.studentmanagement.specification.view.SubjectSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,21 +33,21 @@ import java.util.UUID;
 public class SubjectService {
 
     private SubjectRepository subjectRepository;
+    private SemesterRepository semesterRepository;
     private SubjectGradeRepository subjectGradeRepository;
     private ProgrammeSubjectRepository programmeSubjectRepository;
     private SubjectReleaseRepository subjectReleaseRepository;
-    private SubjectReleaseExtendedRepository subjectReleaseExtendedRepository;
 
     @Autowired
     public SubjectService(SubjectRepository subjectRepository, SubjectGradeRepository subjectGradeRepository,
                           SubjectReleaseRepository subjectReleaseRepository,
                           ProgrammeSubjectRepository programmeSubjectRepository,
-                          SubjectReleaseExtendedRepository subjectReleaseExtendedRepository) {
+                          SemesterRepository semesterRepository) {
         this.subjectRepository = subjectRepository;
         this.subjectGradeRepository = subjectGradeRepository;
         this.programmeSubjectRepository = programmeSubjectRepository;
         this.subjectReleaseRepository = subjectReleaseRepository;
-        this.subjectReleaseExtendedRepository = subjectReleaseExtendedRepository;
+        this.semesterRepository = semesterRepository;
     }
 
     public Page<Subject> search(RequestObject<SubjectPojo> ro) {
@@ -138,8 +139,9 @@ public class SubjectService {
         SubjectReleased subjectReleased = new SubjectReleased();
         subjectReleased.setMaxStudents(subjects.getMaxStudent());
         subjectReleased.setMinStudents(subjects.getMinStudent());
-        subjectReleased.setSubjectId(subjects.getSubjectId());
-        subjectReleased.setSemesterId(semesterId);
+        subjectReleased.setSubject(subjectRepository.findOne(subjects.getSubjectId()));
+        subjectReleased.setSemester(semesterRepository.findOne(semesterId));
+        subjectReleased.setCreatedAt(new Date());
         if (subjects.getSyllabus() != null) {
             String syllPath = saveSyllabus(subjects.getSyllabus());
             subjectReleased.setSyllabusPath(syllPath);
@@ -156,17 +158,28 @@ public class SubjectService {
         return FileUtil.saveFileInDirectory(syllabuses, UUID.randomUUID().toString(), syllabus).getAbsolutePath();
     }
 
-    public Page<SubjectReleaseExtended> searchSubjectRelease(RequestObject<SubjectReleasedPojo> ro) {
+    public Page<SubjectReleaseDTO> searchSubjectRelease(RequestObject<SubjectReleasedPojo> ro) {
         SubjectReleasedPojo data = ro.getData();
 
-        Specifications<SubjectReleaseExtended> spec = Specifications.where(SubjectReleaseExtendedSpecification.hasRecord());
+        Specifications<SubjectReleased> spec = Specifications.where(SubjectReleasedSpecification.hasRecord());
         if (data.getId() != null) {
-            spec = spec.and(SubjectReleaseExtendedSpecification.hasId(data.getId()));
+            spec = spec.and(SubjectReleasedSpecification.hasId(data.getId()));
         }
         if (data.getSemesterId() != null) {
-            spec = spec.and(SubjectReleaseExtendedSpecification.hasSemesterId(data.getSemesterId()));
+            spec = spec.and(SubjectReleasedSpecification.hasSemesterId(data.getSemesterId()));
         }
-        return subjectReleaseExtendedRepository.findAll(spec, ro.getPaging());
+        Page<SubjectReleased> releaseds = subjectReleaseRepository.findAll(spec, ro.getPaging());
+
+
+        return releaseds.map(item ->
+                new SubjectReleaseDTO(item.getId(), item.getSubject().getName(), item.getSubject().getCredits(), item.getSubject().getId(),
+                        item.getSubject().getLanguage() != null ? item.getSubject().getLanguage().toString() : "", item.getSemester().getId(), item.getMaxStudents(), item.getMinStudents(),
+                        item.getSemester().getAdministrationRegBegin(), item.getSemester().getAdministrationRegEnd(),
+                        item.getSemester().getAcademicRegBegin(), item.getSemester().getAcademicRegEnd(), item.getSemester().getBeginDate(),
+                        item.getSemester().getEndDate(), item.getSemester().getSeason(), item.getSemester().getYear())
+
+        );
+
     }
 
     public Page<Subject> searchUnreleasedSubjects(RequestObject<SubjectReleasedPojo> ro) {

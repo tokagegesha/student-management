@@ -135,11 +135,6 @@ public class UniversityService {
     public Page<SemesterUniversityDTO> searchUnselectedUniversitiesForSemester(RequestObject<SemesterUniversityPojo> ro) {
         SemesterUniversityPojo data = ro.getData();
         Page<University> list = universityRepository.getUnactivatedUniversitiesForSemester(ro.getData().getSemesterId(), ro.getPaging());
-        List<SemesterUniversityDTO> sms = new ArrayList<>();
-        list.getContent().forEach(item -> {
-            sms.add(new SemesterUniversityDTO(null, item.getId(), null, null, item.getCountry().getId(), item.getName(), item.getAddress(), item.getCountry().getName(), item.getInfo()));
-        });
-
 
         return list.map(item -> {
             SemesterUniversityDTO dto = new SemesterUniversityDTO(null, item.getId(), null, null, item.getCountry().getId(),

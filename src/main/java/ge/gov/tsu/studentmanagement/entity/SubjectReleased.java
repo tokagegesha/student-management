@@ -2,6 +2,7 @@ package ge.gov.tsu.studentmanagement.entity;
 
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "SUBJECTS_RELEASED")
@@ -21,11 +22,16 @@ public class SubjectReleased  {
     @Column(name = "SYLLABUS_PATH")
     private String syllabusPath;
 
-    @Column(name = "SUBJECT_ID")
-    private Long subjectId;
+    @ManyToOne
+    private Subject subject;
 
-    @Column(name = "SEMESTER_ID")
-    private Long semesterId;
+    @ManyToOne
+    private Semester semester;
+
+
+    @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
 
     //<editor-fold desc="GETTERS AND SETTERS">
 
@@ -54,13 +60,6 @@ public class SubjectReleased  {
         this.maxStudents = maxStudents;
     }
 
-    public Long getSubjectId() {
-        return subjectId;
-    }
-
-    public void setSubjectId(Long subjectId) {
-        this.subjectId = subjectId;
-    }
 
     public String getSyllabusPath() {
         return syllabusPath;
@@ -70,13 +69,29 @@ public class SubjectReleased  {
         this.syllabusPath = syllabusPath;
     }
 
-    public Long getSemesterId() {
-        return semesterId;
+    public Subject getSubject() {
+        return subject;
     }
 
-    public void setSemesterId(Long semesterId) {
-        this.semesterId = semesterId;
+    public void setSubject(Subject subject) {
+        this.subject = subject;
     }
 
-//</editor-fold>
+    public Semester getSemester() {
+        return semester;
+    }
+
+    public void setSemester(Semester semester) {
+        this.semester = semester;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    //</editor-fold>
 }

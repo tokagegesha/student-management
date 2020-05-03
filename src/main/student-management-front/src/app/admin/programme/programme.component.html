@@ -59,7 +59,7 @@
         </div>
         <div class="no-padding col-md-5" style="position: relative;display: flex;padding-left: 0px">
           <select [ngModel]="selectedSemester" class="form-control col-md-5 selector-margin">
-            <option *ngFor="let semester of semesters" [value]="semester">{{semester | formatSemesterName:'ge'}}</option>
+            <option *ngFor="let semesters of semesters" [value]="semesters">{{semesters | formatSemesterName:'ge'}}</option>
           </select>
 
         </div>
@@ -78,7 +78,7 @@
       </tr>
       <tr *ngFor="let prSubject of programmeSubjects">
         <td>{{prSubject.subject.name}}</td>
-        <td>{{prSubject.semester.year + ' - ' + (prSubject.semester.year + 1) + ' ' + (prSubject.semester.season == 1 ? ' შემოდგომა ' : ' გაზაფხული ')}}</td>
+        <td>{{prSubject.semesters.year + ' - ' + (prSubject.semesters.year + 1) + ' ' + (prSubject.semesters.season == 1 ? ' შემოდგომა ' : ' გაზაფხული ')}}</td>
         <td>
           <i class="btn btn-default" role="button" style="padding: 0" (click)="selectedProgrammeSubject =prSubject; deleteProgrammeSubject(selectedProgrammeSubject.id)">
             <span class="glyphicon glyphicon-remove" style="width: 38px" aria-hidden="true" title="საგნების ამოშლა"></span>

@@ -10,7 +10,7 @@ import ge.gov.tsu.studentmanagement.pojo.StudentSubjectPojo;
 import ge.gov.tsu.studentmanagement.pojo.StudentSubjectRecordPojo;
 import ge.gov.tsu.studentmanagement.repository.*;
 import ge.gov.tsu.studentmanagement.rest.request.ActionPerformer;
-import ge.gov.tsu.studentmanagement.specification.view.StudentExtendedSpecification;
+import ge.gov.tsu.studentmanagement.specification.view.StudentSpecification;
 import ge.gov.tsu.studentmanagement.specification.view.StudentSubjectExtendedSpecification;
 import ge.gov.tsu.studentmanagement.specification.view.StudentSubjectRecordSpecification;
 import ge.gov.tsu.studentmanagement.util.DocxGenerator;
@@ -102,10 +102,8 @@ public class StudentService {
     private StudentRepository studentRepository;
     private UserService userService;
     private UserRoleService userRoleService;
-    private StudentExtendedRepository studentExtendedRepository;
     private SecurityTokenService securityTokenService;
     private SettingService settingService;
-    private StudentSemestersRepository studentSemestersRepository;
     private StudentSubjectRepository studentSubjectRepository;
     private StudentSubjectExtendedRepository studentSubjectExtendedRepository;
     private StudentSubjectRecordRepository studentSubjectRecordRepository;
@@ -121,10 +119,8 @@ public class StudentService {
             StudentRepository studentRepository,
             UserService userService,
             UserRoleService userRoleService,
-            StudentExtendedRepository studentExtendedRepository,
             SecurityTokenService securityTokenService,
             SettingService settingService,
-            StudentSemestersRepository studentSemestersRepository,
             StudentSubjectRepository studentSubjectRepository,
             StudentSubjectExtendedRepository studentSubjectExtendedRepository,
             StudentSubjectGradeRepository studentSubjectGradeRepository,
@@ -138,10 +134,8 @@ public class StudentService {
         this.studentRepository = studentRepository;
         this.userRoleService = userRoleService;
         this.userService = userService;
-        this.studentExtendedRepository = studentExtendedRepository;
         this.securityTokenService = securityTokenService;
         this.settingService = settingService;
-        this.studentSemestersRepository = studentSemestersRepository;
         this.studentSubjectRepository = studentSubjectRepository;
         this.studentSubjectExtendedRepository = studentSubjectExtendedRepository;
         this.studentSubjectGradeRepository = studentSubjectGradeRepository;
@@ -166,7 +160,7 @@ public class StudentService {
     ) throws TsuException {
         Student student = new Student();
 
-        student.setUniversityId(studentPojo.getUniversityId());
+        student.setUniversity(universityService.getUniversity(studentPojo.getUniversityId()));
         student.setFirstName(studentPojo.getFirstName());
         student.setLastName(studentPojo.getLastName());
         student.setGender(studentPojo.getGender());
@@ -215,19 +209,17 @@ public class StudentService {
         student.setHealthInsurancePath(healthInsurancePah);
 
         student.setRegistrationDate(new Date());
-        Student saveStudent = studentRepository.save(student);
 
         if (studentPojo.getSemesterIds().size() == 0) {
             throw new TsuException("Semester Is Not Chosen");
         }
+
         studentPojo.getSemesterIds().forEach(aLong -> {
-            StudentSemester studentSemester = new StudentSemester();
-            studentSemester.setStudentId(saveStudent.getId());
-            studentSemester.setSemesterId(aLong);
-            studentSemestersRepository.save(studentSemester );
+            student.getSemesters().add(semesterRepository.findOne(aLong));
         });
 
-        return saveStudent;
+        return studentRepository.save(student);
+
     }
 
 
@@ -330,48 +322,48 @@ public class StudentService {
         return studentRepository.save(studentExtended);
     }
 
-    public Page<StudentExtended> searchExtended(StudentPojo data, Pageable pageable) throws TsuException {
-        Specifications<StudentExtended> spec = Specifications.where(StudentExtendedSpecification.hasRecord());
+    public Page<Student> searchExtended(StudentPojo data, Pageable pageable) throws TsuException {
+        Specifications<Student> spec = Specifications.where(StudentSpecification.hasRecord());
         if (data.getId() != null) {
-            spec = spec.and(StudentExtendedSpecification.hasId(data.getId()));
+            spec = spec.and(StudentSpecification.hasId(data.getId()));
         }
         if (data.getUniversityId() != null) {
-            spec = spec.and(StudentExtendedSpecification.hasUniversityId(data.getUniversityId()));
+            spec = spec.and(StudentSpecification.hasUniversityId(data.getUniversityId()));
         }
         if (data.getUserId() != null) {
-            spec = spec.and(StudentExtendedSpecification.hasUserId(data.getUserId()));
+            spec = spec.and(StudentSpecification.hasUserId(data.getUserId()));
         }
         if (data.getEmail() != null) {
-            spec = spec.and(StudentExtendedSpecification.hasEmail(data.getEmail()));
+            spec = spec.and(StudentSpecification.hasEmail(data.getEmail()));
         }
         if (data.getStatuses() != null) {
-            spec = spec.and(StudentExtendedSpecification.hasStatuses(data.getStatuses()));
+            spec = spec.and(StudentSpecification.hasStatuses(data.getStatuses()));
         }
         if (data.getSearchString() != null) {
-            spec = spec.and(StudentExtendedSpecification.hasSearchString(data.getSearchString()));
+            spec = spec.and(StudentSpecification.hasSearchString(data.getSearchString() != null ? data.getSearchString().toLowerCase() : ""));
         }
         if (data.getSemesterIds() != null && data.getSemesterIds().size() > 0) {
-            spec = spec.and(StudentExtendedSpecification.hasSemesterIds(data.getSemesterIds()));
+            spec = spec.and(StudentSpecification.hasSemesterIds(data.getSemesterIds()));
         }
-        return studentExtendedRepository.findAll(
+        return studentRepository.findAll(
                 spec,
                 pageable);
     }
 
     /*@PersonalInfo*/
-    public StudentExtended getStudent(Long id) throws TsuException {
+    public Student getStudent(Long id) throws TsuException {
         System.out.println("<<<<<<<<<<<<<<<<" + id);
         User userExtended = userService.userDetails(id);
         if (userExtended == null) {
             throw new TsuException("Invalid Sesion");
         }
-        return studentExtendedRepository.getStudentByUserId(userExtended.getId());
+        return studentRepository.getStudentByUserId(userExtended.getId());
     }
 
     @PersonalInfo
-    public StudentExtended getStudentByUserId(Long userId) {
+    public Student getStudentByUserId(Long userId) {
         // TODO: 9/17/2017 check performer permission
-        return studentExtendedRepository.getStudentByUserId(userId);
+        return studentRepository.getStudentByUserId(userId);
     }
   /*  public Page<Candidate> search(CandidatePojo data, Pageable pageable) {
         return candidateRepository.search(data.getId(), data.getProgrammeReleaseId(), data.getId(), data.getEmail(), new Date(), pageable);
@@ -517,7 +509,7 @@ public class StudentService {
 
 
     public ByteArrayOutputStream getStudentFile(Long studentId) {
-        StudentExtended studentExtended = studentExtendedRepository.findOne(studentId);
+        Student studentExtended = studentRepository.findOne(studentId);
         if (studentExtended == null) {
             //todo error must be thrown
             return null;
@@ -531,13 +523,13 @@ public class StudentService {
     }
 
     public ByteArrayOutputStream getStudentAcceptanceFile(Long studentId) throws TsuException, IOException {
-        StudentExtended studentExtended = studentExtendedRepository.findOne(studentId);
+        Student studentExtended = studentRepository.findOne(studentId);
         if (studentExtended == null) {
             //todo error must be thrown
             return null;
         }
 
-        University universityExtended = universityService.getUniversity(studentExtended.getUniversityId());
+        University universityExtended = universityService.getUniversity(studentExtended.getUniversity().getId());
         if (universityExtended == null) {
             throw new TsuException("university Semester Not Found");
         }
@@ -565,7 +557,7 @@ public class StudentService {
     }
 
     public byte[] getStudentAcceptanceFileForDownload(Long studentId) throws TsuException, IOException {
-        StudentExtended studentExtended = studentExtendedRepository.findOne(studentId);
+        Student studentExtended = studentRepository.findOne(studentId);
         if (studentExtended == null) {
             //todo error must be thrown
             return null;
@@ -591,7 +583,7 @@ public class StudentService {
             throw new TsuException("Student Semester Not Found");
         }
 
-        University universityExtended = universityService.getUniversity(student.getUniversityId());
+        University universityExtended = universityService.getUniversity(student.getUniversity().getId());
         if (universityExtended == null) {
             throw new TsuException("university Semester Not Found");
         }
@@ -626,7 +618,7 @@ public class StudentService {
     }
 
     public ByteArrayOutputStream getStudentGridData(StudentPojo data) throws Exception {
-        List<StudentExtended> students = searchExtended(data, null).getContent();
+        List<Student> students = searchExtended(data, null).getContent();
         List<Semester> semesters = semesterRepository.getByIds(data.getSemesterIds());
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         XWPFDocument doc = DocxGenerator.generateStudentGridData(semesters, students);
@@ -680,21 +672,19 @@ public class StudentService {
     }
 
     private void updateStudentChosenSemester(Long studentId, List<Long> semesterIds) {
-        List<StudentSemester> semesters = studentSemestersRepository.getByStudentId(studentId);
-        semesters.forEach(studentSemester -> {
-            studentSemestersRepository.delete(studentSemester);
-        });
+        Student student = studentRepository.findOne(studentId);
+        student.getSemesters().clear();
 
         semesterIds.forEach(aLong -> {
-            StudentSemester studentSemester = new StudentSemester();
-            studentSemester.setStudentId(studentId);
-            studentSemester.setSemesterId(aLong);
-            studentSemestersRepository.save(studentSemester);
+            student.getSemesters().add(semesterRepository.findOne(aLong));
         });
+
+        studentRepository.save(student);
     }
 
-    public List<StudentSemester> getStudentSemesters(Long studentId) {
-        return studentSemestersRepository.getByStudentId(studentId);
+    //change return type 05/03/2020
+    public List<Semester> getStudentSemesters(Long studentId) {
+        return studentRepository.findOne(studentId).getSemesters();
     }
 
 
@@ -708,7 +698,7 @@ public class StudentService {
 
         // TODO: 12/5/2017 პოტენციური ბაგი ძებნის პარამეტრს ქვია studentId შესამოწმებელია რა მნიშვნელობა იდება
         User userExtended = userService.userDetails(userId);
-        StudentExtended studentByUserId = studentExtendedRepository.getStudentByUserId(userExtended.getId());
+        Student studentByUserId = studentRepository.getStudentByUserId(userExtended.getId());
 
         Specifications<StudentSubjectRecord> spec = Specifications.where(StudentSubjectRecordSpecification.hasRecord());
         if (studentByUserId != null) {

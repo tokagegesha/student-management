@@ -1,7 +1,7 @@
 package ge.gov.tsu.studentmanagement.apiutils.file;
 
 import ge.gov.tsu.studentmanagement.apiutils.DateUtil;
-import ge.gov.tsu.studentmanagement.entity.view.StudentExtended;
+import ge.gov.tsu.studentmanagement.entity.Student;
 import ge.gov.tsu.studentmanagement.pojo.UploadedFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -174,7 +174,7 @@ public class FileUtil {
         }
     }
 
-    public static ByteArrayOutputStream createZip(StudentExtended studentExtended) throws Exception {
+    public static ByteArrayOutputStream createZip(Student studentExtended) throws Exception {
 
         File cv = new File(rootDir + studentExtended.getCvPath());
         File diploma = new File(rootDir + studentExtended.getDiplomaPath());
@@ -193,7 +193,7 @@ public class FileUtil {
                 "First Name: " + studentExtended.getFirstName() + System.lineSeparator() +
                         "Last Name: " + studentExtended.getLastName() + System.lineSeparator() +
                         "Email: " + studentExtended.getEmail() + System.lineSeparator() +
-                        "University name: " + studentExtended.getUniversityName() + System.lineSeparator();
+                        "University name: " + studentExtended.getUniversity().getName() + System.lineSeparator();
         //sb.append("Programme degree: "+candidate.getProgrammeDegree()+System.lineSeparator());
 
         ZipEntry info = new ZipEntry("info-" + studentExtended.getFirstName() + "-" + studentExtended.getLastName() + ".txt");

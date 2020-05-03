@@ -1,6 +1,6 @@
 <div class="form-group col-md-2">
-  <label for="semester">სემესტრი:</label>
-  <select id="semester" class="form-control" (change)="semesterChanged()" [(ngModel)]="selectedSemester">
+  <label for="semesters">სემესტრი:</label>
+  <select id="semesters" class="form-control" (change)="semesterChanged()" [(ngModel)]="selectedSemester">
     <option *ngFor="let sem of semesters" [ngValue]="sem">{{sem | formatSemesterName :'ge'}}</option>
   </select>
 </div>

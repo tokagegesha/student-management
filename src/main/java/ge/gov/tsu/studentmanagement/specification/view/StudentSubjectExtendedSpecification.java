@@ -1,11 +1,7 @@
 package ge.gov.tsu.studentmanagement.specification.view;
 
-import ge.gov.tsu.studentmanagement.entity.view.StudentExtended;
 import ge.gov.tsu.studentmanagement.entity.view.StudentSubjectExtended;
 import ge.gov.tsu.studentmanagement.specification.Specification;
-
-import javax.persistence.criteria.Path;
-import java.util.List;
 
 public class StudentSubjectExtendedSpecification {
 

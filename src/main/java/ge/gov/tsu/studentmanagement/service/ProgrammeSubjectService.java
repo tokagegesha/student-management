@@ -2,8 +2,8 @@ package ge.gov.tsu.studentmanagement.service;
 
 import ge.gov.tsu.studentmanagement.entity.ProgrammeSubject;
 import ge.gov.tsu.studentmanagement.entity.StudentSubject;
+import ge.gov.tsu.studentmanagement.entity.SubjectReleased;
 import ge.gov.tsu.studentmanagement.entity.view.ProgrammeSubjectExtended;
-import ge.gov.tsu.studentmanagement.entity.view.SubjectReleaseExtended;
 import ge.gov.tsu.studentmanagement.exception.TsuException;
 import ge.gov.tsu.studentmanagement.pojo.ProgrammeSubjectPojo;
 import ge.gov.tsu.studentmanagement.repository.*;
@@ -14,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
-import sun.dc.pr.PRError;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,24 +28,24 @@ public class ProgrammeSubjectService {
     private ProgrammeRepository programmeRepository;
     private SemesterRepository semesterRepository;
     private SubjectRepository subjectRepository;
+    private SubjectReleaseRepository subjectReleaseRepository;
     private StudentSubjectRepository studentSubjectRepository;
-    private SubjectReleaseExtendedRepository subjectReleaseExtendedRepository;
 
     @Autowired
     public ProgrammeSubjectService(ProgrammeSubjectExtendedRepository programmeSubjectExtendedRepository,
                                    ProgrammeSubjectRepository programmeSubjectRepository,
                                    ProgrammeRepository programmeRepository,
                                    SemesterRepository semesterRepository,
+                                   SubjectReleaseRepository subjectReleaseRepository,
                                    SubjectRepository subjectRepository,
-                                   StudentSubjectRepository studentSubjectRepository,
-                                   SubjectReleaseExtendedRepository subjectReleaseExtendedRepository) {
+                                   StudentSubjectRepository studentSubjectRepository) {
         this.programmeSubjectExtendedRepository = programmeSubjectExtendedRepository;
         this.programmeSubjectRepository = programmeSubjectRepository;
         this.subjectRepository = subjectRepository;
+        this.subjectReleaseRepository = subjectReleaseRepository;
         this.programmeRepository = programmeRepository;
         this.semesterRepository = semesterRepository;
         this.studentSubjectRepository = studentSubjectRepository;
-        this.subjectReleaseExtendedRepository = subjectReleaseExtendedRepository;
     }
 
     public Page<ProgrammeSubjectExtended> search(ProgrammeSubjectPojo data, Pageable pageable) {
@@ -77,7 +76,7 @@ public class ProgrammeSubjectService {
 
     }
 
-    public Page<SubjectReleaseExtended> getCutProgrammeSubjects(ProgrammeSubjectPojo data, Pageable pageable) {
+    public Page<SubjectReleased> getCutProgrammeSubjects(ProgrammeSubjectPojo data, Pageable pageable) {
 
         List<Long> ids = new ArrayList<>();
         List<StudentSubject> studentId = studentSubjectRepository.findByStudentId(data.getStudentId());
@@ -89,7 +88,7 @@ public class ProgrammeSubjectService {
                 ids.add(-1L);
             }
         }
-        return subjectReleaseExtendedRepository.getStudentSubjectExpectAlreadyChosenSubjects(
+        return subjectReleaseRepository.getStudentSubjectExpectAlreadyChosenSubjects(
                 ids,
                 data.getSemesterId(),
                 pageable

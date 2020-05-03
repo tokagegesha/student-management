@@ -9,21 +9,21 @@
     <th>ხილვადი</th>
     <th></th>
   </tr>
-  <tr *ngFor="let semester of semesters">
+  <tr *ngFor="let semesters of semesters">
     <td></td>
-    <td>{{semester | formatSemesterName}}</td>
-    <td>({{semester.beginDate.jsdate | date: 'yyyy-dd-MM'}}) - ({{semester.endDate.jsdate | date: 'yyyy-dd-MM'}})</td>
-    <td>({{semester.academicRegBegin.jsdate | date: 'yyyy-dd-MM'}}) - ({{semester.academicRegEnd.jsdate | date: 'yyyy-dd-MM'}})</td>
-    <td>({{semester.administrationRegBegin.jsdate | date: 'yyyy-dd-MM'}}) - ({{semester.administrationRegEnd.jsdate | date: 'yyyy-dd-MM'}})</td>
-    <td>{{semester.visible==1?'ხილვადი':'არ არის ხილვადი'}}</td>
+    <td>{{semesters | formatSemesterName}}</td>
+    <td>({{semesters.beginDate.jsdate | date: 'yyyy-dd-MM'}}) - ({{semesters.endDate.jsdate | date: 'yyyy-dd-MM'}})</td>
+    <td>({{semesters.academicRegBegin.jsdate | date: 'yyyy-dd-MM'}}) - ({{semesters.academicRegEnd.jsdate | date: 'yyyy-dd-MM'}})</td>
+    <td>({{semesters.administrationRegBegin.jsdate | date: 'yyyy-dd-MM'}}) - ({{semesters.administrationRegEnd.jsdate | date: 'yyyy-dd-MM'}})</td>
+    <td>{{semesters.visible==1?'ხილვადი':'არ არის ხილვადი'}}</td>
     <td>
-      <i class="btn btn-default" role="button" style="padding: 0" (click)="addEditSubjects(semester); open(semesterSubjectsModal)">
+      <i class="btn btn-default" role="button" style="padding: 0" (click)="addEditSubjects(semesters); open(semesterSubjectsModal)">
         <span class="glyphicon glyphicon-align-justify" style="width: 38px" aria-hidden="true" title="საგნების სია"></span>
       </i>
-      <i class="btn btn-default" role="button" style="padding: 0" (click)="dataModal=semester; open(addEditSemesterModal)">
+      <i class="btn btn-default" role="button" style="padding: 0" (click)="dataModal=semesters; open(addEditSemesterModal)">
         <span class="glyphicon glyphicon-pencil" style="width: 38px" aria-hidden="true" title="შეცვლა"></span>
       </i>
-      <i class="btn btn-default" role="button" style="padding: 0" (click)="showEditSemesterUniversities(semester); open(addEditSemesterUniversities)">
+      <i class="btn btn-default" role="button" style="padding: 0" (click)="showEditSemesterUniversities(semesters); open(addEditSemesterUniversities)">
         <span class="glyphicon glyphicon-education" style="width: 38px" aria-hidden="true" title="უნივერსიტეტები"></span>
       </i>
     </td>

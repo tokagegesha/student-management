@@ -2,10 +2,11 @@ package ge.gov.tsu.studentmanagement.repository;
 
 import ge.gov.tsu.studentmanagement.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface StudentRepository extends JpaRepository<Student, Long> {
+public interface StudentRepository extends JpaRepository<Student, Long>, JpaSpecificationExecutor<Student> {
 
 
     /*String searchQuery = "FROM #{#entityName} e where " +
@@ -35,14 +36,14 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 */
     @Query("select e FROM Student e where" +
             "(e.id = :id) and " +
-            "(:status is null or e.status = :status) " )
+            "(:status is null or e.status = :status) ")
     Student getCandidateByIdAndStatus(
             @Param("id") Long id,
             @Param("status") Integer status);
 
 
     @Query("select e FROM Student e where" +
-            "(e.id = :id) " )
+            "(e.id = :id) ")
     Student getCandidateById(@Param("id") Long id);
 
 

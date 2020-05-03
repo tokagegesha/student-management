@@ -17,6 +17,22 @@ export class SemesterService {
     }
   };
 
+  private uniPaging = {
+    sort: {
+      orders: [
+        {property: "university.name", direction: "ASC"},
+      ]
+    }
+  };
+
+  private subjectPaging = {
+    sort: {
+      orders: [
+        {property: "subject.name", direction: "ASC"},
+      ]
+    }
+  };
+
   constructor(@Inject(Http) private http: Http,
               @Inject(RequestHelperService) private requestHelper: RequestHelperService) {
   }
@@ -87,12 +103,12 @@ export class SemesterService {
      .toPromise().then(res => res.json());
 
      */
-    return this.requestHelper.postToPromise("/semester/" + ( param.id ? "edit" : "add"), {
+    return this.requestHelper.postToPromise("/semester/" + (param.id ? "edit" : "add"), {
       data: param, paging: this.paging
     }, toast, true)
   }
 
-  getStudentSemesters(param: {studentId}, toast: ToastsManager) {
+  getStudentSemesters(param: { studentId }, toast: ToastsManager) {
     /* return this.http.post("/api/student/semester/get", {data: param,}, this.headers)
      .map(res => res.json());*/
 
@@ -108,7 +124,7 @@ export class SemesterService {
    return responseObject;
    }*/
 
-  getNotSelectedSubjects(param: {semesterId}, toast: ToastsManager) {
+  getNotSelectedSubjects(param: { semesterId }, toast: ToastsManager) {
     //return this.http.post("/api/subject/unreleased/search", {data: param}, this.headers).map(res => res.json());
 
     return this.requestHelper.postToPromise("subject/unreleased/search", {
@@ -116,23 +132,23 @@ export class SemesterService {
     }, toast, false)
   }
 
-  getSelectedSubjects(param: {semesterId}, toast: ToastsManager) {
+  getSelectedSubjects(param: { semesterId }, toast: ToastsManager) {
     //return this.http.post("/api/subject/released/search", {data: param}, this.headers).map(res => res.json());
 
     return this.requestHelper.postToPromise("subject/released/search", {
-      data: param
+      data: param, param, paging: this.subjectPaging
     }, toast, false)
   }
 
-  getSelectedUniversities(param: {semesterId}, toast: ToastsManager) {
+  getSelectedUniversities(param: { semesterId }, toast: ToastsManager) {
     //return this.http.post("/unsecured/api/university/semester/selected/search", {data: param}, this.headers).map(res => res.json());
 
     return this.requestHelper.postToPromiseUnsecured("university/semester/selected/search", {
-      data: param
+      data: param, paging: this.uniPaging
     }, toast, false)
   }
 
-  getNotSelectedUniversities(param: {semesterId}, toast: ToastsManager) {
+  getNotSelectedUniversities(param: { semesterId }, toast: ToastsManager) {
     //return this.http.post("/unsecured/api/university/semester/unselected/search", {data: param}, this.headers).map(res => res.json());
 
     return this.requestHelper.postToPromiseUnsecured("university/semester/unselected/search", {
@@ -209,16 +225,16 @@ export class SemesterService {
 
   }
 
-  removeUniversityInSemester(universityId: number, semesterId: number,toast:ToastsManager) {
-   /* return this.http.post("/unsecured/api/semester/university/remove", {
-      data: {
-        "universityId": universityId,
-        "semesterId": semesterId
-      }
-    }, this.headers).toPromise().then(res => {
-      return res.json();
-    });
-*/
+  removeUniversityInSemester(universityId: number, semesterId: number, toast: ToastsManager) {
+    /* return this.http.post("/unsecured/api/semester/university/remove", {
+       data: {
+         "universityId": universityId,
+         "semesterId": semesterId
+       }
+     }, this.headers).toPromise().then(res => {
+       return res.json();
+     });
+ */
     return this.requestHelper.postToPromiseUnsecured("semester/university/remove", {
       data: {
         "universityId": universityId,

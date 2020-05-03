@@ -43,11 +43,11 @@
     <!--<td>{{candidate.semesterYear + ' - ' + (candidate.semesterYear + 1) + ' ' + (candidate.semesterSeason == 1 ?
       'Autumn' : 'Spring')}}
     </td>-->
-    <td>{{candidate.universityName}}</td>
+    <td>{{candidate.university.name}}</td>
     <td>{{candidate.registrationDate | formatDate: true: true}}</td>
     <td>
-      <div *ngFor="let semester of candidate.semesters">
-        <div>{{semester | formatSemesterName}}</div>
+      <div *ngFor="let semesters of candidate.semesters">
+        <div>{{semesters | formatSemesterName}}</div>
       </div>
     </td>
     <td>

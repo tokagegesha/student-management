@@ -1,12 +1,9 @@
 package ge.gov.tsu.studentmanagement.repository;
 
-import ge.gov.tsu.studentmanagement.entity.StudentSemester;
 import ge.gov.tsu.studentmanagement.entity.view.StudentSemesterExtended;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
-
-import java.util.List;
 
 public interface StudentSemesterExtendedRepository extends PagingAndSortingRepository<StudentSemesterExtended, Long> {
 

@@ -280,8 +280,8 @@ export class SemesterComponent implements OnInit {
   }
 
   addSemesterUniversity(item) {
-    console.log(item, this.selectedSemester);
-    this.semesterService.addSemesterUniversity(item.id, this.selectedSemester.id, this.toast).then(res => {
+    console.log(11,item, this.selectedSemester);
+    this.semesterService.addSemesterUniversity(item.universityId, this.selectedSemester.id, this.toast).then(res => {
       if (res.data) {
         this.syncUniversityListNew(this.selectedSemester);
       }

@@ -4,6 +4,7 @@ import ge.gov.tsu.studentmanagement.entity.statics.DegreeType;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "STUDENTS")
@@ -18,9 +19,6 @@ public class Student  {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "REGISTRATION_DATE", nullable = false)
     private Date registrationDate;
-
-    @Column(name = "UNIVERSITY_ID")
-    private Long universityId;
 
     @Column(name = "USER_ID")
     private Long userId;
@@ -126,6 +124,16 @@ public class Student  {
     @JoinColumn(name = "EXCHANGE_PROGRAMME_ID")
     private ExchangeProgramme exchangeProgramme;
 
+    @ManyToMany
+    @JoinTable(
+            name = "student_semester",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "semester_id"))
+    private List<Semester> semesters;
+
+    @ManyToOne
+    private University university;
+
     //<editor-fold desc="GETTERS AND SETTERS">
 
 
@@ -146,13 +154,6 @@ public class Student  {
         this.registrationDate = registrationDate;
     }
 
-    public Long getUniversityId() {
-        return universityId;
-    }
-
-    public void setUniversityId(Long universityId) {
-        this.universityId = universityId;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -426,5 +427,22 @@ public class Student  {
     public void setDegree(DegreeType degree) {
         this.degree = degree;
     }
+
+    public List<Semester> getSemesters() {
+        return semesters;
+    }
+
+    public void setSemesters(List<Semester> semesters) {
+        this.semesters = semesters;
+    }
+
+    public University getUniversity() {
+        return university;
+    }
+
+    public void setUniversity(University university) {
+        this.university = university;
+    }
+
     //</editor-fold>
 }

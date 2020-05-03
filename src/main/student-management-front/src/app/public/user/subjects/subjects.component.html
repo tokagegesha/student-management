@@ -6,7 +6,7 @@
       <div class="form-group">
         <select class="form-control" [(ngModel)]="selectedSemester"
                 (ngModelChange)="loadSubjects(selectedSemester.semesterId)">
-          <option *ngFor="let semester of semesters" [ngValue]="semester"> {{semester | formatSemesterName:'ge'}}</option>
+          <option *ngFor="let semesters of semesters" [ngValue]="semesters"> {{semesters | formatSemesterName:'ge'}}</option>
         </select>
       </div>
     </div>

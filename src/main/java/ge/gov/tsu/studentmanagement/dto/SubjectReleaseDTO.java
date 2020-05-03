@@ -1,62 +1,58 @@
-package ge.gov.tsu.studentmanagement.entity.view;
+package ge.gov.tsu.studentmanagement.dto;
 
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.util.Date;
 
-@Entity(name = "SUBJECT_RELEASE_EXTENDED")
-public class SubjectReleaseExtended {
+public class SubjectReleaseDTO {
 
-    @Id
-    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "NAME")
     private String name;
 
-    @Column(name = "CREDITS")
     private Integer credits;
 
-    @Column(name = "SUBJECT_ID")
     private Long subjectId;
 
-    @Column(name = "LANGUAGE")
     private String language;
 
-    @Column(name = "SEMESTER_ID")
     private Long semesterId;
 
-    @Column(name = "MAX_STUDENTS")
     private Integer maxStudent;
 
-    @Column(name = "MIN_STUDENTS")
     private Integer minStudent;
 
-    @Column(name = "SM_ACADEMIC_REG_BEGIN")
     private Date semesterAcademicRegBegin;
 
-    @Column(name = "SM_ACADEMIC_REG_END")
     private Date semesterAcademicRegEnd;
 
-    @Column(name = "SM_ADMINISTRATION_REG_BEGIN")
     private Date semesterAdministrationRegBegin;
 
-    @Column(name = "SM_ADMINISTRATION_REG_END")
     private Date semesterAdministrationRegEnd;
-
-    @Column(name = "SM_BEGIN_DATE")
     private Date semesterBeginDate;
 
-    @Column(name = "SM_END_DATE")
     private Date semesterEndDate;
 
-    @Column(name = "SM_SEASON")
     private Integer season;
 
-    @Column(name = "SM_YEAR")
     private Integer semesterYear;
+
+    public SubjectReleaseDTO(Long id, String name, Integer credits, Long subjectId, String language, Long semesterId, Integer maxStudent, Integer minStudent, Date semesterAcademicRegBegin, Date semesterAcademicRegEnd, Date semesterAdministrationRegBegin, Date semesterAdministrationRegEnd, Date semesterBeginDate, Date semesterEndDate, Integer season, Integer semesterYear) {
+        this.id = id;
+        this.name = name;
+        this.credits = credits;
+        this.subjectId = subjectId;
+        this.language = language;
+        this.semesterId = semesterId;
+        this.maxStudent = maxStudent;
+        this.minStudent = minStudent;
+        this.semesterAcademicRegBegin = semesterAcademicRegBegin;
+        this.semesterAcademicRegEnd = semesterAcademicRegEnd;
+        this.semesterAdministrationRegBegin = semesterAdministrationRegBegin;
+        this.semesterAdministrationRegEnd = semesterAdministrationRegEnd;
+        this.semesterBeginDate = semesterBeginDate;
+        this.semesterEndDate = semesterEndDate;
+        this.season = season;
+        this.semesterYear = semesterYear;
+    }
 
     public Long getId() {
         return id;

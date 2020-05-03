@@ -1,25 +1,15 @@
 package ge.gov.tsu.studentmanagement.util;
 
 import ge.gov.tsu.studentmanagement.entity.Semester;
-import ge.gov.tsu.studentmanagement.entity.view.StudentExtended;
+import ge.gov.tsu.studentmanagement.entity.Student;
 import ge.gov.tsu.studentmanagement.entity.view.StudentSemesterExtended;
 import ge.gov.tsu.studentmanagement.entity.view.StudentSubjectRecord;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTFitTextImpl;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.util.Date;
 import java.util.List;
 
 public class DocxGenerator {
@@ -260,7 +250,7 @@ public class DocxGenerator {
 
     }
 
-    public static XWPFDocument generateStudentGridData(List<Semester> semester, List<StudentExtended> students) throws IOException, XmlException {
+    public static XWPFDocument generateStudentGridData(List<Semester> semester, List<Student> students) throws IOException, XmlException {
         XWPFDocument document = new XWPFDocument();
         XWPFParagraph docHeadParagraph = document.createParagraph();
         docHeadParagraph.setAlignment(ParagraphAlignment.CENTER);
@@ -359,7 +349,7 @@ public class DocxGenerator {
 
         int rowNum = 1;
 
-        for (StudentExtended studentExtended : students) {
+        for (Student studentExtended : students) {
 
             XWPFTableRow studentDataTableRow = studentDataTable.createRow();
 
@@ -397,7 +387,7 @@ public class DocxGenerator {
             XWPFTableCell studentUniValXwpfTableCell = studentDataTableRow.getCell(4);
             studentUniValXwpfTableCell.getParagraphs().get(0).setAlignment(ParagraphAlignment.CENTER);
             XWPFRun xwpfRun6 = studentUniValXwpfTableCell.getParagraphs().get(0).createRun();
-            xwpfRun6.setText(studentExtended.getUniversityName() + "(" + studentExtended.getUniCountryGeorgianName() + ")");
+            xwpfRun6.setText(studentExtended.getUniversity().getName() + "(" + studentExtended.getUniversity().getGeorgianName() + ")");
             xwpfRun6.setFontFamily(fontFamily);
 
 
@@ -418,7 +408,7 @@ public class DocxGenerator {
             String firstName,
             String lastName,
             String birthDate,
-            List<StudentSemesterExtended> semesters,
+            List<Semester> semesters,
             String uniName,
             String countryName,
             String departmentHeadName,
@@ -474,7 +464,7 @@ public class DocxGenerator {
         bodText += "born on ";
         bodText += birthDate + ", " + "has been admitted to study  as an exchange student at " + tsuName + " for  the";
         for (int i = 0; i < semesters.size(); i++) {
-            StudentSemesterExtended sse = semesters.get(i);
+            Semester sse = semesters.get(i);
             String seasonVal = sse.getSeason() == 1 ? " autumn" : " spring";
             String sem = sse.getYear() + "/" + (sse.getYear() + 1);
             bodText += seasonVal + " semester of the year " + sem;
