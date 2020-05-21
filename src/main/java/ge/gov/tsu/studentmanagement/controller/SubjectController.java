@@ -59,9 +59,19 @@ public class SubjectController {
         return ResponseObject.createSuccessfulResponse(subjectService.addReleasedSubjects(ro));
     }
 
+    @RequestMapping(value = "/api/subject/release/addAll", method = RequestMethod.POST, produces = {"application/json"})
+    public ResponseObject addAllReleasedSubjects(@RequestBody RequestObject<SubjectReleasedPojo> ro) throws Exception {
+        return ResponseObject.createSuccessfulResponse(subjectService.addAllReleasedSubjects(ro));
+    }
+
     @RequestMapping(value = "/api/subject/release/delete", method = RequestMethod.POST, produces = {"application/json"})
     public ResponseObject deleteReleasedSubjects(@RequestBody RequestObject<SubjectReleasedPojo> ro) throws Exception {
         subjectService.deleteSubjectRelease(ro);
+        return ResponseObject.createSuccessfulResponse();
+    }
+    @RequestMapping(value = "/api/subject/release/deleteAll", method = RequestMethod.POST, produces = {"application/json"})
+    public ResponseObject deleteAllReleasedSubjects(@RequestBody RequestObject<SubjectReleasedPojo> ro) throws Exception {
+        subjectService.deleteAllSubjectRelease(ro);
         return ResponseObject.createSuccessfulResponse();
     }
 

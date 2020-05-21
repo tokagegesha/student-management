@@ -137,9 +137,11 @@
     <button type="button" class="close" aria-label="Close" (click)="c('Close click')"><span aria-hidden="true">&times;</span></button>
   </div>
   <div class="modal-body">
-    <div class="btn-group" role="group" aria-label="...">
+    <div class="btn-group" style="width: 100%;margin-bottom: 4px" role="group" aria-label="...">
       <button type="button" class="btn" [ngClass]="{'btn-default': ssFilterState===false, 'btn-success': ssFilterState}" (click)="ssFilterState = true">გააქტიურებული</button>
       <button type="button" class="btn" [ngClass]="{'btn-default': ssFilterState, 'btn-success': !ssFilterState}" (click)="ssFilterState = false">შეჩერებული</button>
+      <button type="button" class="btn btn-primary" style="float:right" *ngIf="!ssFilterState" (click)="activeAll()">ყველას გააქტიურება</button>
+      <button type="button" class="btn btn-primary"  style="float:right" *ngIf="ssFilterState" (click)="deleteAll()">ყველას შეჩერება</button>
     </div>
     <br>
     <div style="overflow-y: scroll;max-height: 50vh">

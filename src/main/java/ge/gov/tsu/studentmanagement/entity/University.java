@@ -49,8 +49,7 @@ public class University {
     private Country country;
 
 
-@JsonBackReference
-
+    @JsonBackReference
     @OneToMany(mappedBy = "university")
     private List<SemesterUniversity> semesterUniversities;
 

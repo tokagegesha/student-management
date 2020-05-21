@@ -47,7 +47,9 @@ export class SubjectComponent implements OnInit {
       id: null,
       name: '',
       credits: null,
-      language: ''
+      language: '',
+      defaultMaxStudent: null,
+      defaultMinStudent: null
     }
 
   }
@@ -65,28 +67,18 @@ export class SubjectComponent implements OnInit {
     });
   }
 
-  addNewSubject(name: string, credits: number, language: string) {
+  addNewSubject(name: string,defaultMaxStudent: number,defaultMinStudent: number, credits: number, language: string) {
     this.newSubject.working = true;
-    this.subjectService.addSubject(name, credits, language, this.toast).then(res => {
-      if (res.data && res.data.length == 1) {
-        this.newSubject.result = {success: true, data: res.data[0]};
-        this.subjects.push(res.data[0]);
-      } else {
-        this.newSubject.result = {success: false, data: null};
-      }
+    this.subjectService.addSubject(name,defaultMaxStudent,defaultMinStudent, credits, language, this.toast).then(res => {
+      this.loadData();
       this.newSubject.working = false;
     }, error2 => this.newSubject.working = false);
   }
 
-  editSubject(id: number, name: string, credits: number, language: string) {
+  editSubject(id: number, name: string,string,defaultMaxStudent: number,defaultMinStudent: number, credits: number, language: string) {
     this.selectedSubjectEdit.working = true;
-    this.subjectService.editSubject(id, name, credits, language, this.toast).then(res => {
-      if (res.data && res.data.length == 1) {
-        this.selectedSubjectEdit.result = {success: true, data: res.data[0]};
-        this.loadData();
-      } else {
-        this.selectedSubjectEdit.result = {success: false, data: null};
-      }
+    this.subjectService.editSubject(id, name, defaultMaxStudent,defaultMinStudent, credits, language, this.toast).then(res => {
+      this.loadData();
       this.selectedSubjectEdit.working = false;
     }, error2 => this.selectedSubjectEdit.working = false);
 
@@ -137,5 +129,7 @@ interface Subject {
   name: string;
   credits: number;
   language: string;
+  defaultMaxStudent: number;
+  defaultMinStudent: number;
 }
 

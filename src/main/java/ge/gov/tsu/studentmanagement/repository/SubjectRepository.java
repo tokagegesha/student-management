@@ -50,4 +50,11 @@ public interface SubjectRepository extends JpaRepository<Subject, Long>,JpaSpeci
             , nativeQuery = true)
     Page<Subject> getSubjectExpectReleasedData(@Param("semesterId") Long semesterId, Pageable pageable);
 
+
+
+
+
+    @Query("select s from Subject s left join s.subjectReleaseds sr on sr.semester.id=:semesterId where sr.subject.id is null")
+    List<Subject> getAllUnreleasedSubjects(@Param("semesterId") Long semesterId);
+
 }

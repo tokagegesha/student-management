@@ -44,7 +44,7 @@
           <tr *ngFor="let uniProgramme of universityProgrammes">
             <td>{{uniProgramme.name}}</td>
             <td>{{uniProgramme.type == 1 ? 'Bachelor' : 'Masters'}}</td>
-            <td><a [routerLink]="['/programme', uniProgramme.id, 'semesters', selectedSemester.id]" [queryParams]="{universityId: selectedUniversity.id}">view</a></td>
+            <td><a [routerLink]="['/programme', uniProgramme.id, 'semester', selectedSemester.id]" [queryParams]="{universityId: selectedUniversity.id}">view</a></td>
           </tr>
         </table>
         <button type="button" class="btn btn-primary">

@@ -30,7 +30,7 @@ export class SemesterService {
       orders: [
         {property: "subject.name", direction: "ASC"},
       ]
-    }
+    },  size: 999999,
   };
 
   constructor(@Inject(Http) private http: Http,

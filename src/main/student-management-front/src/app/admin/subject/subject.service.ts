@@ -40,7 +40,7 @@ export class SubjectService {
     return this.requestHelper.postToPromise('subject/except/search', {data: pojo}, toast, false)
   }
 
-  editSubject(id: number, name: string, credits: number, language: string, toast: ToastsManager) {
+  editSubject(id: number, name: string,defaultMaxStudent: number,defaultMinStudent: number, credits: number, language: string, toast: ToastsManager) {
     /* return this.http.post("/api/subject/edit", {
      data: {
      id: id,
@@ -55,7 +55,9 @@ export class SubjectService {
         id: id,
         name: name,
         credits: credits,
-        language: language
+        language: language,
+        defaultMaxStudent: defaultMaxStudent,
+        defaultMinStudent: defaultMinStudent
       }
     }, toast, true)
   }
@@ -77,7 +79,7 @@ export class SubjectService {
     }, toast, false)
   }
 
-  addSubject(name: string, credits: number, language: string, toast: ToastsManager) {
+  addSubject(name: string, defaultMaxStudent: number, defaultMinStudent: number, credits: number, language: string, toast: ToastsManager) {
     /*return this.http.post("/api/subject/add", {
      data: {
      name: name,
@@ -91,7 +93,9 @@ export class SubjectService {
       data: {
         name: name,
         credits: credits,
-        language: language
+        language: language,
+        defaultMaxStudent: defaultMaxStudent,
+        defaultMinStudent: defaultMinStudent
       }
     }, toast, true)
 
@@ -143,6 +147,20 @@ export class SubjectService {
     // }
 
     return this.requestHelper.postToPromise('subject/release/add', {
+      data: a
+    }, toast, true)
+  }
+
+  activateAllSubject(semesterId: number, toast: ToastsManager) {
+    let a = Object.assign({semesterId: semesterId});
+    return this.requestHelper.postToPromise('subject/release/addAll', {
+      data: a
+    }, toast, true)
+  }
+
+  deleteAllRelease(semesterId: number, toast: ToastsManager) {
+    let a = Object.assign({semesterId: semesterId});
+    return this.requestHelper.postToPromise('subject/release/deleteAll', {
       data: a
     }, toast, true)
   }

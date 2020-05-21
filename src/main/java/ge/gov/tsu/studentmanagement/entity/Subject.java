@@ -1,15 +1,17 @@
 package ge.gov.tsu.studentmanagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import ge.gov.tsu.studentmanagement.entity.statics.LanguageType;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "SUBJECTS")
-public class Subject  {
+public class Subject {
     @Id
-    @SequenceGenerator(name = "SEQ_SUBJECTS", sequenceName = "SEQ_SUBJECTS", allocationSize = 1,initialValue = 100)
+    @SequenceGenerator(name = "SEQ_SUBJECTS", sequenceName = "SEQ_SUBJECTS", allocationSize = 1, initialValue = 100)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_SUBJECTS")
     @Column(name = "ID", nullable = false)
     private Long id;
@@ -20,7 +22,11 @@ public class Subject  {
     @Column(name = "CREDITS")
     private Integer credits;
 
-    @Column( nullable = false)
+    private Integer defaultMinStudent = 10;
+
+    private Integer defaultMaxStudent = 100;
+
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
@@ -30,6 +36,11 @@ public class Subject  {
     @Enumerated(EnumType.STRING)
     @Column(name = "LANGUAGE")
     private LanguageType language;
+
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "subject")
+    private List<SubjectReleased> subjectReleaseds;
 
 
     //<editor-fold desc="GETTERS AND SETTERS">
@@ -82,6 +93,30 @@ public class Subject  {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Integer getDefaultMinStudent() {
+        return defaultMinStudent;
+    }
+
+    public void setDefaultMinStudent(Integer defaultMinStudent) {
+        this.defaultMinStudent = defaultMinStudent;
+    }
+
+    public Integer getDefaultMaxStudent() {
+        return defaultMaxStudent;
+    }
+
+    public void setDefaultMaxStudent(Integer defaultMaxStudent) {
+        this.defaultMaxStudent = defaultMaxStudent;
+    }
+
+    public List<SubjectReleased> getSubjectReleaseds() {
+        return subjectReleaseds;
+    }
+
+    public void setSubjectReleaseds(List<SubjectReleased> subjectReleaseds) {
+        this.subjectReleaseds = subjectReleaseds;
     }
 
     //</editor-fold>

@@ -4,12 +4,16 @@
   <tr>
     <th>დასახელება</th>
     <th>კრედიტი</th>
+    <th>default მინიმალური სტუდენტი</th>
+    <th>default მაქსიმალური სტუდენტი</th>
     <th></th>
     <th></th>
   </tr>
   <tr *ngFor="let subject of subjects">
     <td>{{subject.name}}</td>
     <td>{{subject.credits}}</td>
+    <td>{{subject.defaultMinStudent}}</td>
+    <td>{{subject.defaultMaxStudent}}</td>
     <td>
       <i class="btn btn-default" role="button" style="padding: 0"
          (click)="selectedSubject = subject;open(openSubjectEdit)">
@@ -40,6 +44,20 @@
            [ngModel]="subject.name">
 
     <br>
+
+
+    <input class="form-control" required type="text" placeholder="defaultMinStudent" name="defaultMinStudent" #defaultMinStudent="ngModel"
+           [ngModel]="subject.defaultMinStudent">
+
+    <br>
+
+
+    <input class="form-control" required type="text" placeholder="defaultMaxStudent" name="defaultMaxStudent" #defaultMaxStudent="ngModel"
+           [ngModel]="subject.defaultMaxStudent">
+
+    <br>
+
+
     <select (change)="selectedCredits= $event.target.value" class="form-control">
       <option *ngFor="let credit of subCredits" [value]="credit">{{credit}}
       </option>
@@ -71,7 +89,7 @@
     <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
     <button type="button"
             class="btn btn-primary"
-            (click)="addNewSubject(name.value,selectedCredits,selectedSubjectLanguage)">
+            (click)="addNewSubject(name.value, defaultMaxStudent.value, defaultMinStudent.value,selectedCredits,selectedSubjectLanguage)">
       შენახვა
     </button>
   </div>
@@ -97,6 +115,19 @@
     </select>
     <br>
 
+
+    <input class="form-control" required type="text" placeholder="defaultMinStudent" name="defaultMinStudent" #defaultMinStudent="ngModel"
+           [ngModel]="selectedSubject.defaultMinStudent">
+
+    <br>
+
+
+    <input class="form-control" required type="text" placeholder="defaultMaxStudent" name="defaultMaxStudent" #defaultMaxStudent="ngModel"
+           [ngModel]="selectedSubject.defaultMaxStudent">
+
+    <br>
+
+
     <select (change)="selectedSubject.language= $event.target.value" class="form-control">
       <option *ngFor="let leng of subjectLanguages" [value]="leng" [selected]="selectedSubject.language==leng">{{leng}}
       </option>
@@ -121,7 +152,7 @@
     <button type="button" class="btn btn-secondary" (click)="c('Close click')">Close</button>
     <button type="button"
             class="btn btn-primary"
-            (click)="editSubject(selectedSubject.id,name.value,selectedSubject.credits,selectedSubject.language)">
+            (click)="editSubject(selectedSubject.id,name.value,defaultMaxStudent.value, defaultMinStudent.value,selectedSubject.credits,selectedSubject.language)">
       შენახვა
     </button>
   </div>

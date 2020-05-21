@@ -120,6 +120,21 @@ export class SemesterComponent implements OnInit {
       }
     })
   }
+  activeAll() {
+    this.subjectService.activateAllSubject( this.selectedSemester.id, this.toast).then(res => {
+      if (res.data) {
+        this.syncSubjectListNew(this.selectedSemester);
+      }
+    })
+  }
+
+  deleteAll() {
+    this.subjectService.deleteAllRelease( this.selectedSemester.id, this.toast).then(res => {
+      if (res.data) {
+        this.syncSubjectListNew(this.selectedSemester);
+      }
+    })
+  }
 
   moveToActivated(semester) {
     this.ssFilterState = true;

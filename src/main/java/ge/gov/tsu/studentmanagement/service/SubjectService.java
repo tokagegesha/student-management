@@ -3,10 +3,7 @@ package ge.gov.tsu.studentmanagement.service;
 import ge.gov.tsu.studentmanagement.apiutils.file.FileUtil;
 import ge.gov.tsu.studentmanagement.dto.SemesterUniversityDTO;
 import ge.gov.tsu.studentmanagement.dto.SubjectReleaseDTO;
-import ge.gov.tsu.studentmanagement.entity.ProgrammeSubject;
-import ge.gov.tsu.studentmanagement.entity.Subject;
-import ge.gov.tsu.studentmanagement.entity.SubjectGrade;
-import ge.gov.tsu.studentmanagement.entity.SubjectReleased;
+import ge.gov.tsu.studentmanagement.entity.*;
 import ge.gov.tsu.studentmanagement.exception.TsuException;
 import ge.gov.tsu.studentmanagement.pojo.ProgrammeSubjectPojo;
 import ge.gov.tsu.studentmanagement.pojo.SubjectPojo;
@@ -97,6 +94,15 @@ public class SubjectService {
         subject.setId(data.getId());
         subject.setName(data.getName());
         subject.setCredits(data.getCredits());
+
+        if (data.getDefaultMaxStudent() != null) {
+            subject.setDefaultMaxStudent(data.getDefaultMaxStudent());
+
+        }
+        if (data.getDefaultMinStudent() != null) {
+            subject.setDefaultMinStudent(data.getDefaultMinStudent());
+        }
+
         subject.setCreatedAt(new Date());
         subject.setExecutiveUserId(data.getExecutiveUserId());
         return subjectRepository.save(subject);
@@ -116,6 +122,12 @@ public class SubjectService {
         }
         if (subjectPojo.getExecutiveUserId() != null) {
             u.setExecutiveUserId(subjectPojo.getExecutiveUserId());
+        }
+        if (subjectPojo.getDefaultMinStudent() != null) {
+            u.setDefaultMinStudent(subjectPojo.getDefaultMinStudent());
+        }
+        if (subjectPojo.getDefaultMaxStudent() != null) {
+            u.setDefaultMaxStudent(subjectPojo.getDefaultMaxStudent());
         }
         if (subjectPojo.getLanguage() != null) {
             u.setLanguage(subjectPojo.getLanguage());
@@ -150,6 +162,34 @@ public class SubjectService {
         subjectReleaseRepository.save(subjectReleased);
 
         return subjectReleased;
+    }
+
+    @Transactional
+    public boolean addAllReleasedSubjects(RequestObject<SubjectReleasedPojo> ro) throws TsuException {
+        Long semesterId = ro.getData().getSemesterId();
+        if (semesterId == null) {
+            throw new TsuException("Semester_Id Not Found");
+        }
+
+        List<Subject> all = subjectRepository.getAllUnreleasedSubjects(semesterId);
+        System.out.println(all.size());
+        List<SubjectReleased> allRelease = new ArrayList<>();
+        Semester semester = semesterRepository.findOne(semesterId);
+        all.forEach(item -> {
+            SubjectReleasedPojo subjects = ro.getData();
+            SubjectReleased subjectReleased = new SubjectReleased();
+            subjectReleased.setMaxStudents(item.getDefaultMaxStudent());
+            subjectReleased.setMinStudents(item.getDefaultMinStudent());
+            subjectReleased.setSubject(item);
+            subjectReleased.setSemester(semester);
+            subjectReleased.setCreatedAt(new Date());
+            allRelease.add(subjectReleased);
+        });
+
+
+         subjectReleaseRepository.save(allRelease);
+
+        return true;
     }
 
     private String saveSyllabus(MultipartFile syllabus) {
@@ -194,6 +234,12 @@ public class SubjectService {
             throw new TsuException("Subject_Release Not Found");
         }
         subjectReleaseRepository.delete(subjectRelease);
+    }
+
+    @Transactional
+    public void deleteAllSubjectRelease(RequestObject<SubjectReleasedPojo> ro) throws TsuException {
+        SubjectReleasedPojo data = ro.getData();
+        subjectReleaseRepository.deleteAllSubjectRelease(data.getSemesterId());
     }
 
     public SubjectGrade addSubjectGradeType(Long subjectReleasedId, Integer max, String name, Integer type, ActionPerformer actionPerformer) {

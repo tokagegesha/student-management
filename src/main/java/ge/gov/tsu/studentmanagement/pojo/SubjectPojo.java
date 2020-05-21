@@ -6,6 +6,8 @@ public class SubjectPojo {
     private Long id;
     private String name;
     private Integer credits;
+    private Integer defaultMinStudent;
+    private Integer defaultMaxStudent;
     private Long executiveUserId;
     private LanguageType language;
 
@@ -47,5 +49,21 @@ public class SubjectPojo {
 
     public void setLanguage(LanguageType language) {
         this.language = language;
+    }
+
+    public Integer getDefaultMinStudent() {
+        return defaultMinStudent;
+    }
+
+    public void setDefaultMinStudent(Integer defaultMinStudent) {
+        this.defaultMinStudent = defaultMinStudent;
+    }
+
+    public Integer getDefaultMaxStudent() {
+        return defaultMaxStudent;
+    }
+
+    public void setDefaultMaxStudent(Integer defaultMaxStudent) {
+        this.defaultMaxStudent = defaultMaxStudent;
     }
 }
